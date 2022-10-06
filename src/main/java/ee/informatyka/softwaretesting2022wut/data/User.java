@@ -18,4 +18,10 @@ public class User {
 	@Email(message = "It's not an email")
 	public String email;
 
+	public Role role;
+
+	enum Role {
+		USER, ADMIN
+	}
+
 }
