@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AdminController {
 	@GetMapping
-	public String getCreateProfileView() {
+	public String getAdminView() {
 		return "";
 	}
 }
