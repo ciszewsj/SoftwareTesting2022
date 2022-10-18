@@ -39,12 +39,12 @@ public class UserServiceTest {
 		user.setStreet("Wiśniowa 23");
 		user.setCountry("Poland");
 		user.setRole(User.UserRole.USER);
-		when(userRepository.getUserByEmail(anyString())).thenReturn(Optional.empty());
+		when(userRepository.getUserByEmailIsLike(anyString())).thenReturn(Optional.empty());
 		when(userRepository.save(any(User.class))).thenReturn(user);
 
 		userUseCase.createUser(user);
 
-		verify(userRepository, times(1)).getUserByEmail(any());
+		verify(userRepository, times(1)).getUserByEmailIsLike(any());
 		verify(userRepository, times(1)).save(any());
 	}
 
@@ -60,11 +60,11 @@ public class UserServiceTest {
 		user.setStreet("Wiśniowa 23");
 		user.setCountry("Poland");
 		user.setRole(User.UserRole.USER);
-		when(userRepository.getUserByEmail(anyString())).thenReturn(Optional.of(user));
+		when(userRepository.getUserByEmailIsLike(anyString())).thenReturn(Optional.of(user));
 
 		assertThrows(IllegalArgumentException.class, () -> userUseCase.createUser(user));
 
-		verify(userRepository, times(1)).getUserByEmail(any());
+		verify(userRepository, times(1)).getUserByEmailIsLike(any());
 		verify(userRepository, times(0)).save(any());
 	}
 

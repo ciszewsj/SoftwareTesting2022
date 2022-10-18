@@ -9,5 +9,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> getUserById(Long playerId);
 
-	Optional<User> getUserByEmail(String email);
+	Optional<User> getUserByEmailIsLike(String email);
 }
