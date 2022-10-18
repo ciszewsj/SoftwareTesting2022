@@ -19,7 +19,7 @@ public class UserService implements UserUseCase {
 		if (user.getId() == null && user.getName() != null
 				&& user.getPassword() != null
 				&& user.getEmail() != null
-				&& userRepository.getUserByEmail(user.getEmail()).isEmpty()) {
+				&& userRepository.getUserByEmailIsLike(user.getEmail()).isEmpty()) {
 			userRepository.save(user);
 		} else {
 			throw new IllegalArgumentException();

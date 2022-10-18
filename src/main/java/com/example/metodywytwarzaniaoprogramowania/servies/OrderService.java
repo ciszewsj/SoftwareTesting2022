@@ -31,7 +31,7 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public void addProductToOrder(Long productId, Long userId) {
-		User user = userRepository.getUserById(userId).orElseThrow(IllegalArgumentException::new);
+		User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
 		Product product = productRepository.getProductById(productId).orElseThrow(IllegalArgumentException::new);
 		Order order = orderRepository.getOrderByStatusAndUserId(Order.Status.NOT_PAID, user.getId()).orElseGet(() -> {
 			Order newOrder = new Order();

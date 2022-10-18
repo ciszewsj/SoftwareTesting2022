@@ -55,13 +55,13 @@ public class OrderServiceTest {
 		order.setId(orderId);
 		order.setStatus(Order.Status.NOT_PAID);
 		order.setProducts(new ArrayList<>());
-		when(userRepository.getUserById(anyLong())).thenReturn(Optional.of(user));
+		when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.of(product));
 		when(orderRepository.getOrderByStatusAndUserId(any(), anyLong())).thenReturn(Optional.of(order));
 
 		orderUseCase.addProductToOrder(productId, userId);
 
-		verify(userRepository, times(1)).getUserById(any());
+		verify(userRepository, times(1)).findById(any());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(orderRepository, times(1)).getOrderByStatusAndUserId(any(), anyLong());
 	}
@@ -74,13 +74,13 @@ public class OrderServiceTest {
 		Long productId = 1L;
 		Product product = new Product();
 		product.setId(productId);
-		when(userRepository.getUserById(anyLong())).thenReturn(Optional.of(user));
+		when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.of(product));
 		when(orderRepository.getOrderByStatusAndUserId(any(), anyLong())).thenReturn(Optional.empty());
 
 		orderUseCase.addProductToOrder(productId, userId);
 
-		verify(userRepository, times(1)).getUserById(any());
+		verify(userRepository, times(1)).findById(any());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(orderRepository, times(1)).getOrderByStatusAndUserId(any(), anyLong());
 	}
@@ -89,11 +89,11 @@ public class OrderServiceTest {
 	void testAddProductToOrderWhenUserNotExist() {
 		Long userId = 1L;
 		Long productId = 1L;
-		when(userRepository.getUserById(anyLong())).thenReturn(Optional.empty());
+		when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
 		assertThrows(IllegalArgumentException.class, () -> orderUseCase.addProductToOrder(productId, userId));
 
-		verify(userRepository, times(1)).getUserById(any());
+		verify(userRepository, times(1)).findById(any());
 		verify(productRepository, times(0)).getProductById(any());
 		verify(orderRepository, times(0)).getOrderByStatusAndUserId(any(), anyLong());
 	}
@@ -104,12 +104,12 @@ public class OrderServiceTest {
 		User user = new User();
 		user.setId(userId);
 		Long productId = 1L;
-		when(userRepository.getUserById(anyLong())).thenReturn(Optional.of(user));
+		when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.empty());
 
 		assertThrows(IllegalArgumentException.class, () -> orderUseCase.addProductToOrder(productId, userId));
 
-		verify(userRepository, times(1)).getUserById(any());
+		verify(userRepository, times(1)).findById(any());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(orderRepository, times(0)).getOrderByStatusAndUserId(any(), anyLong());
 	}
