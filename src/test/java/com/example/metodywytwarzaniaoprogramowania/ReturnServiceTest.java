@@ -4,6 +4,8 @@ package com.example.metodywytwarzaniaoprogramowania;
 import com.example.metodywytwarzaniaoprogramowania.data.Order;
 import com.example.metodywytwarzaniaoprogramowania.data.Return;
 import com.example.metodywytwarzaniaoprogramowania.data.User;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.OrderRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.ReturnRepository;
 import com.example.metodywytwarzaniaoprogramowania.servies.ReturnService;
@@ -62,8 +64,9 @@ public class ReturnServiceTest {
 		String returnOrderString = "It's broken";
 		when(orderRepository.getOrderByStatusAndId(any(), any())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> returnUseCase.createReturn(returnOrderString, orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> returnUseCase.createReturn(returnOrderString, orderId));
 
+		assertEquals(ShopErrorTypes.ORDER_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), any());
 		verify(returnRepository, times(0)).save(any());
 	}
@@ -77,8 +80,9 @@ public class ReturnServiceTest {
 		String returnOrderString = null;
 		when(orderRepository.getOrderByStatusAndId(any(), any())).thenReturn(Optional.of(order));
 
-		assertThrows(IllegalArgumentException.class, () -> returnUseCase.createReturn(returnOrderString, orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> returnUseCase.createReturn(returnOrderString, orderId));
 
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), any());
 		verify(returnRepository, times(0)).save(any());
 	}
@@ -130,8 +134,9 @@ public class ReturnServiceTest {
 		returnOrder.setId(orderId);
 		when(returnRepository.findById(anyLong())).thenReturn(Optional.of(returnOrder));
 
-		assertThrows(IllegalArgumentException.class, () -> returnUseCase.changeReturnStatus(orderId, status));
+		ShopException shopException = assertThrows(ShopException.class, () -> returnUseCase.changeReturnStatus(orderId, status));
 
+		assertEquals(ShopErrorTypes.ILLEGAL_RETURN_STATUS_CHANGE, shopException.getErrorTypes());
 		verify(returnRepository, times(1)).findById(anyLong());
 		verify(returnRepository, times(0)).save(any());
 	}
@@ -142,8 +147,9 @@ public class ReturnServiceTest {
 		Return.ReturnStatus status = Return.ReturnStatus.REPORTED;
 		when(returnRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> returnUseCase.changeReturnStatus(orderId, status));
+		ShopException shopException = assertThrows(ShopException.class, () -> returnUseCase.changeReturnStatus(orderId, status));
 
+		assertEquals(ShopErrorTypes.RETURN_NOT_FOUND, shopException.getErrorTypes());
 		verify(returnRepository, times(1)).findById(anyLong());
 		verify(returnRepository, times(0)).save(any());
 	}

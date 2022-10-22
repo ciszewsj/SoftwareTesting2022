@@ -1,6 +1,8 @@
 package com.example.metodywytwarzaniaoprogramowania;
 
 import com.example.metodywytwarzaniaoprogramowania.data.*;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.OrderRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.ProductRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.SpecialOfferRepository;
@@ -18,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -91,8 +92,9 @@ public class OrderServiceTest {
 		Long productId = 1L;
 		when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.addProductToOrder(productId, userId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.addProductToOrder(productId, userId));
 
+		assertEquals(ShopErrorTypes.USER_NOT_FOUND, shopException.getErrorTypes());
 		verify(userRepository, times(1)).findById(any());
 		verify(productRepository, times(0)).getProductById(any());
 		verify(orderRepository, times(0)).getOrderByStatusAndUserId(any(), anyLong());
@@ -107,7 +109,9 @@ public class OrderServiceTest {
 		when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.addProductToOrder(productId, userId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.addProductToOrder(productId, userId));
+
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 
 		verify(userRepository, times(1)).findById(any());
 		verify(productRepository, times(1)).getProductById(any());
@@ -144,8 +148,9 @@ public class OrderServiceTest {
 		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.of(order));
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.of(product));
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.deleteProductFromOrder(productId, orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.deleteProductFromOrder(productId, orderId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), anyLong());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(orderRepository, times(0)).save(any());
@@ -162,8 +167,9 @@ public class OrderServiceTest {
 		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.of(order));
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.deleteProductFromOrder(productId, orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.deleteProductFromOrder(productId, orderId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), anyLong());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(orderRepository, times(0)).save(any());
@@ -179,8 +185,9 @@ public class OrderServiceTest {
 		product.setId(productId);
 		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.deleteProductFromOrder(productId, orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.deleteProductFromOrder(productId, orderId));
 
+		assertEquals(ShopErrorTypes.ORDER_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), anyLong());
 		verify(productRepository, times(0)).getProductById(any());
 		verify(orderRepository, times(0)).save(any());
@@ -265,8 +272,9 @@ public class OrderServiceTest {
 		order.getProducts().addAll(List.of(productA, productB));
 		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.of(order));
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.payForOrder(orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.payForOrder(orderId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_AVALIABLE, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), anyLong());
 		verify(orderRepository, times(0)).save(any());
 		verify(productRepository, times(0)).save(any());
@@ -278,8 +286,9 @@ public class OrderServiceTest {
 		Long orderId = 1L;
 		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.payForOrder(orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.payForOrder(orderId));
 
+		assertEquals(ShopErrorTypes.ORDER_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).getOrderByStatusAndId(any(), anyLong());
 		verify(orderRepository, times(0)).save(any());
 	}
@@ -308,8 +317,9 @@ public class OrderServiceTest {
 		order.setStatus(Order.Status.NOT_PAID);
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.changeOrderStatus(orderId, status));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.changeOrderStatus(orderId, status));
 
+		assertEquals(ShopErrorTypes.ILLEGAL_CHANGE_PRODUCT_STATUS, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
 		verify(orderRepository, times(0)).save(any());
 	}
@@ -323,8 +333,9 @@ public class OrderServiceTest {
 		order.setStatus(Order.Status.NEW);
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.changeOrderStatus(orderId, status));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.changeOrderStatus(orderId, status));
 
+		assertEquals(ShopErrorTypes.ILLEGAL_CHANGE_PRODUCT_STATUS, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
 		verify(orderRepository, times(0)).save(any());
 	}
@@ -335,8 +346,9 @@ public class OrderServiceTest {
 		Long orderId = 1L;
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.changeOrderStatus(orderId, status));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.changeOrderStatus(orderId, status));
 
+		assertEquals(ShopErrorTypes.ORDER_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
 		verify(orderRepository, times(0)).save(any());
 	}
@@ -449,8 +461,9 @@ public class OrderServiceTest {
 		order.getProducts().addAll(List.of(productA));
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.getOrderPrice(orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.getOrderPrice(orderId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
 		verify(specialOfferRepository, times(0)).getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any());
 	}
@@ -473,8 +486,9 @@ public class OrderServiceTest {
 		Long orderId = 1L;
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> orderUseCase.getOrderPrice(orderId));
+		ShopException shopException = assertThrows(ShopException.class, () -> orderUseCase.getOrderPrice(orderId));
 
+		assertEquals(ShopErrorTypes.ORDER_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
 		verify(specialOfferRepository, times(0)).getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any());
 	}

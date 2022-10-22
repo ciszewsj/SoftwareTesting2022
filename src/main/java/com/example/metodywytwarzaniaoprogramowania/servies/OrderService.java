@@ -4,6 +4,8 @@ import com.example.metodywytwarzaniaoprogramowania.data.Order;
 import com.example.metodywytwarzaniaoprogramowania.data.Product;
 import com.example.metodywytwarzaniaoprogramowania.data.SpecialOffer;
 import com.example.metodywytwarzaniaoprogramowania.data.User;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.OrderRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.ProductRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.SpecialOfferRepository;
@@ -31,8 +33,8 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public void addProductToOrder(Long productId, Long userId) {
-		User user = userRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-		Product product = productRepository.getProductById(productId).orElseThrow(IllegalArgumentException::new);
+		User user = userRepository.findById(userId).orElseThrow(new ShopException(ShopErrorTypes.USER_NOT_FOUND));
+		Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
 		Order order = orderRepository.getOrderByStatusAndUserId(Order.Status.NOT_PAID, user.getId()).orElseGet(() -> {
 			Order newOrder = new Order();
 			newOrder.setProducts(new ArrayList<>());
@@ -48,10 +50,10 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public void deleteProductFromOrder(Long productId, Long orderId) {
-		Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(IllegalArgumentException::new);
-		Product product = productRepository.getProductById(productId).orElseThrow(IllegalArgumentException::new);
+		Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
+		Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
 		if (!order.getProducts().contains(product)) {
-			throw new IllegalArgumentException();
+			throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
 		}
 		order.getProducts().remove(product);
 		orderRepository.save(order);
@@ -69,12 +71,12 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public void payForOrder(Long orderId) {
-		Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(IllegalArgumentException::new);
+		Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
 		for (Product product : order.getProducts()) {
 			try {
 				product.getFromShelf();
 			} catch (IllegalStateException e) {
-				throw new IllegalArgumentException();
+				throw new ShopException(ShopErrorTypes.PRODUCT_NOT_AVALIABLE);
 			}
 			productRepository.save(product);
 		}
@@ -85,23 +87,23 @@ public class OrderService implements OrderUseCase {
 
 	@Override
 	public void changeOrderStatus(Long orderId, Order.Status status) {
-		Order order = orderRepository.findById(orderId).orElseThrow(IllegalArgumentException::new);
+		Order order = orderRepository.findById(orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
 		if (order.getStatus() != Order.Status.NOT_PAID && status != Order.Status.NOT_PAID) {
 			order.setStatus(status);
 			orderRepository.save(order);
 		} else {
-			throw new IllegalArgumentException();
+			throw new ShopException(ShopErrorTypes.ILLEGAL_CHANGE_PRODUCT_STATUS);
 		}
 	}
 
 	@Override
 	public Long getOrderPrice(Long orderId) {
-		Order order = orderRepository.findById(orderId).orElseThrow(IllegalArgumentException::new);
+		Order order = orderRepository.findById(orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
 		Date now = new Date();
 		long price = 0;
 		for (Product product : order.getProducts()) {
 			if (product.getId() == null) {
-				throw new IllegalArgumentException();
+				throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
 			}
 			SpecialOffer specialOffer = specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(product.getId(), now, now)
 					.orElse(null);
