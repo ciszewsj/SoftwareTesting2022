@@ -1,12 +1,18 @@
 package com.example.metodywytwarzaniaoprogramowania;
 
+import com.example.metodywytwarzaniaoprogramowania.data.Order;
 import com.example.metodywytwarzaniaoprogramowania.data.Product;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.ProductRepository;
 import com.example.metodywytwarzaniaoprogramowania.servies.ProductService;
 import com.example.metodywytwarzaniaoprogramowania.usecases.ProductUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -56,8 +62,9 @@ public class ProductServiceTest {
 		product.setDescription("Awesome Kayak");
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> productUseCase.getProduct(productId));
+		ShopException shopException = assertThrows(ShopException.class, () -> productUseCase.getProduct(productId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 	}
 
 	@Test
@@ -116,7 +123,20 @@ public class ProductServiceTest {
 		product.setName("Kayak");
 		product.setDescription("Awesome Kayak");
 
-		assertThrows(IllegalArgumentException.class, () -> productUseCase.createProduct(product));
+		ShopException shopException = assertThrows(ShopException.class, () -> productUseCase.createProduct(product));
+
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
+	}
+
+	@ParameterizedTest
+	@ValueSource(longs = {Long.MIN_VALUE, -100, 0})
+	void testCreateProductWhenWrongPrice(long price) {
+		Product product = new Product();
+		product.setPrice(price);
+
+		ShopException shopException = assertThrows(ShopException.class, () -> productUseCase.createProduct(product));
+
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
 	}
 
 	@Test
@@ -135,12 +155,25 @@ public class ProductServiceTest {
 		verify(productRepository, times(1)).save(any());
 	}
 
+	@ParameterizedTest
+	@ValueSource(longs = {Long.MIN_VALUE, -100, 0})
+	void testUpdateProductWhenWrongPrice(long price) {
+		Product product = new Product();
+		product.setPrice(price);
+
+		ShopException shopException = assertThrows(ShopException.class, () -> productUseCase.updateProduct(product));
+
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
+	}
+
 	@Test
 	void testUpdateProductWhenProductNotExist() {
 		Product product = new Product();
+		product.setPrice(1L);
 
-		assertThrows(IllegalArgumentException.class, () -> productUseCase.updateProduct(product));
+		ShopException shopException = assertThrows(ShopException.class, () -> productUseCase.updateProduct(product));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(productRepository, times(0)).save(any());
 	}
@@ -167,8 +200,9 @@ public class ProductServiceTest {
 		Long productId = 1L;
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> productUseCase.deleteProduct(productId));
+		ShopException shopException = assertThrows(ShopException.class, () -> productUseCase.deleteProduct(productId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(productRepository, times(1)).getProductById(any());
 		verify(productRepository, times(0)).delete(any());
 	}

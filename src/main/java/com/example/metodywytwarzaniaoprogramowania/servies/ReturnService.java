@@ -2,6 +2,8 @@ package com.example.metodywytwarzaniaoprogramowania.servies;
 
 import com.example.metodywytwarzaniaoprogramowania.data.Order;
 import com.example.metodywytwarzaniaoprogramowania.data.Return;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.OrderRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.ReturnRepository;
 import com.example.metodywytwarzaniaoprogramowania.usecases.ReturnUseCase;
@@ -21,7 +23,7 @@ public class ReturnService implements ReturnUseCase {
 
 	@Override
 	public Return createReturn(String returnOrder, Long orderId) {
-		Order order = orderRepository.getOrderByStatusAndId(Order.Status.DELIVERD, orderId).orElseThrow(IllegalArgumentException::new);
+		Order order = orderRepository.getOrderByStatusAndId(Order.Status.DELIVERD, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
 		if (returnOrder != null) {
 			Return newReturn = new Return();
 			newReturn.setDescription(returnOrder);
@@ -29,7 +31,7 @@ public class ReturnService implements ReturnUseCase {
 			newReturn.setOrder(order);
 			return returnRepository.save(newReturn);
 		} else {
-			throw new IllegalArgumentException();
+			throw new ShopException(ShopErrorTypes.ILLEGAL_REQUEST_BODY);
 		}
 	}
 
@@ -40,12 +42,12 @@ public class ReturnService implements ReturnUseCase {
 
 	@Override
 	public void changeReturnStatus(Long returnOrderId, Return.ReturnStatus returnStatus) {
-		Return returnOrder = returnRepository.findById(returnOrderId).orElseThrow(IllegalArgumentException::new);
+		Return returnOrder = returnRepository.findById(returnOrderId).orElseThrow(new ShopException(ShopErrorTypes.RETURN_NOT_FOUND));
 		if (returnStatus != Return.ReturnStatus.REPORTED) {
 			returnOrder.setStatus(returnStatus);
 			returnRepository.save(returnOrder);
 		} else {
-			throw new IllegalArgumentException();
+			throw new ShopException(ShopErrorTypes.ILLEGAL_RETURN_STATUS_CHANGE);
 		}
 
 	}

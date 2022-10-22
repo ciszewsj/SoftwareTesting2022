@@ -2,6 +2,8 @@ package com.example.metodywytwarzaniaoprogramowania;
 
 import com.example.metodywytwarzaniaoprogramowania.data.Product;
 import com.example.metodywytwarzaniaoprogramowania.data.SpecialOffer;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.ProductRepository;
 import com.example.metodywytwarzaniaoprogramowania.repositories.SpecialOfferRepository;
 import com.example.metodywytwarzaniaoprogramowania.servies.SpecialOfferService;
@@ -9,6 +11,8 @@ import com.example.metodywytwarzaniaoprogramowania.usecases.SpecialOfferUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -49,6 +53,21 @@ public class SpecialOfferTest {
 		assertEquals(product, returnSpecialOffer.getProduct());
 	}
 
+	@ParameterizedTest
+	@ValueSource(longs = {Long.MIN_VALUE, -100, 0})
+	void testAddSpecialOfferForProductWhenWrongPrice(long price) {
+		Long productId = 10L;
+		Product product = new Product();
+		product.setId(productId);
+		SpecialOffer specialOffer = new SpecialOffer();
+		specialOffer.setPrice(price);
+		when(productRepository.getProductById(anyLong())).thenReturn(Optional.of(product));
+
+		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.addSpecialOfferForProduct(specialOffer, productId));
+
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
+	}
+
 	@Test
 	void testAddSpecialOfferForProductWhenProductNotExist() {
 		Long productId = 10L;
@@ -56,9 +75,9 @@ public class SpecialOfferTest {
 		specialOffer.setPrice(10L);
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () ->
-				specialOfferUseCase.addSpecialOfferForProduct(specialOffer, productId));
+		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.addSpecialOfferForProduct(specialOffer, productId));
 
+		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(productRepository, times(1)).getProductById(anyLong());
 		verify(specialOfferRepository, times(0)).save(any());
 	}
@@ -74,9 +93,9 @@ public class SpecialOfferTest {
 		specialOffer.setPrice(10L);
 		when(productRepository.getProductById(anyLong())).thenReturn(Optional.of(product));
 
-		assertThrows(IllegalArgumentException.class, () ->
-				specialOfferUseCase.addSpecialOfferForProduct(specialOffer, productId));
+		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.addSpecialOfferForProduct(specialOffer, productId));
 
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
 		verify(productRepository, times(1)).getProductById(anyLong());
 		verify(specialOfferRepository, times(0)).save(any());
 	}
@@ -124,8 +143,9 @@ public class SpecialOfferTest {
 		product.setName("Kayak");
 		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(any(), any(), any())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId));
+		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId));
 
+		assertEquals(ShopErrorTypes.SPECIAL_OFFER_NOT_FOUND, shopException.getErrorTypes());
 		verify(specialOfferRepository, times(1)).getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(any(), any(), any());
 	}
 
@@ -147,8 +167,9 @@ public class SpecialOfferTest {
 		Long specialOfferId = 1L;
 		when(specialOfferRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> specialOfferUseCase.deleteSpecialOffer(specialOfferId));
+		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.deleteSpecialOffer(specialOfferId));
 
+		assertEquals(ShopErrorTypes.SPECIAL_OFFER_NOT_FOUND, shopException.getErrorTypes());
 		verify(specialOfferRepository, times(1)).findById(any());
 		verify(specialOfferRepository, times(0)).delete(any());
 	}

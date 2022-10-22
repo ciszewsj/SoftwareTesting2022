@@ -1,6 +1,8 @@
 package com.example.metodywytwarzaniaoprogramowania;
 
 import com.example.metodywytwarzaniaoprogramowania.data.User;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopErrorTypes;
+import com.example.metodywytwarzaniaoprogramowania.exception.ShopException;
 import com.example.metodywytwarzaniaoprogramowania.repositories.UserRepository;
 import com.example.metodywytwarzaniaoprogramowania.servies.UserService;
 import com.example.metodywytwarzaniaoprogramowania.usecases.UserUseCase;
@@ -12,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Date;
 import java.util.Optional;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -62,8 +65,9 @@ public class UserServiceTest {
 		user.setRole(User.UserRole.USER);
 		when(userRepository.getUserByEmailIsLike(anyString())).thenReturn(Optional.of(user));
 
-		assertThrows(IllegalArgumentException.class, () -> userUseCase.createUser(user));
+		ShopException shopException = assertThrows(ShopException.class, () -> userUseCase.createUser(user));
 
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
 		verify(userRepository, times(1)).getUserByEmailIsLike(any());
 		verify(userRepository, times(0)).save(any());
 	}
@@ -82,7 +86,9 @@ public class UserServiceTest {
 		user.setCountry("Poland");
 		user.setRole(User.UserRole.USER);
 
-		assertThrows(IllegalArgumentException.class, () -> userUseCase.createUser(user));
+		ShopException shopException = assertThrows(ShopException.class, () -> userUseCase.createUser(user));
+
+		assertEquals(ShopErrorTypes.ILLEGAL_REQUEST_BODY, shopException.getErrorTypes());
 	}
 
 	@Test
@@ -122,8 +128,9 @@ public class UserServiceTest {
 		user.setRole(User.UserRole.USER);
 		when(userRepository.getUserById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> userUseCase.updateUser(user));
+		ShopException shopException = assertThrows(ShopException.class, () -> userUseCase.updateUser(user));
 
+		assertEquals(ShopErrorTypes.USER_NOT_FOUND, shopException.getErrorTypes());
 		verify(userRepository, times(1)).getUserById(any());
 		verify(userRepository, times(0)).save(any());
 	}
@@ -143,8 +150,9 @@ public class UserServiceTest {
 		user.setRole(User.UserRole.USER);
 		when(userRepository.getUserById(anyLong())).thenReturn(Optional.of(user));
 
-		assertThrows(IllegalArgumentException.class, () -> userUseCase.updateUser(user));
+		ShopException shopException = assertThrows(ShopException.class, () -> userUseCase.updateUser(user));
 
+		assertEquals(ShopErrorTypes.USER_NOT_FOUND, shopException.getErrorTypes());
 		verify(userRepository, times(1)).getUserById(any());
 		verify(userRepository, times(0)).save(any());
 	}
@@ -172,12 +180,13 @@ public class UserServiceTest {
 	}
 
 	@Test
-	void testDeleteUserWhenNoPlayerWithId() {
+	void testDeleteUserWhenNoUserWithId() {
 		Long userId = 12L;
 		when(userRepository.getUserById(anyLong())).thenReturn(Optional.empty());
 
-		assertThrows(IllegalArgumentException.class, () -> userUseCase.deleteUser(userId));
+		ShopException shopException = assertThrows(ShopException.class, () -> userUseCase.deleteUser(userId));
 
+		assertEquals(ShopErrorTypes.USER_NOT_FOUND, shopException.getErrorTypes());
 		verify(userRepository, times(1)).getUserById(any());
 		verify(userRepository, times(0)).delete(any());
 	}
