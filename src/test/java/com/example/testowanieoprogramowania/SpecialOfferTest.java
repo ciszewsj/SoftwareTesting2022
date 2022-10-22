@@ -15,9 +15,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import static com.example.testowanieoprogramowania.Utils.getTimeWithAdd;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -126,9 +126,11 @@ public class SpecialOfferTest {
 		product.setName("Kayak");
 		SpecialOffer specialOffer = new SpecialOffer();
 		specialOffer.setId(1L);
+		specialOffer.setStart(getTimeWithAdd(-1));
+		specialOffer.setStop(getTimeWithAdd(2));
 		specialOffer.setPrice(10L);
 		specialOffer.setProduct(product);
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(any(), any(), any())).thenReturn(Optional.of(specialOffer));
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(any())).thenReturn(List.of(specialOffer));
 
 		SpecialOffer returnSpecialOffer = specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId);
 
@@ -141,12 +143,94 @@ public class SpecialOfferTest {
 		Product product = new Product();
 		product.setId(productId);
 		product.setName("Kayak");
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(any(), any(), any())).thenReturn(Optional.empty());
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(any())).thenReturn(new ArrayList<>());
 
 		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId));
 
 		assertEquals(ShopErrorTypes.SPECIAL_OFFER_NOT_FOUND, shopException.getErrorTypes());
-		verify(specialOfferRepository, times(1)).getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(any(), any(), any());
+		verify(specialOfferRepository, times(1)).getAllByProductIdOrderByPrice(any());
+	}
+
+	@Test
+	void testGetCurrentBestSpecialOfferForProductWhenExpired() {
+		Long productId = 1L;
+		Product product = new Product();
+		product.setId(productId);
+		product.setName("Kayak");
+		SpecialOffer specialOffer = new SpecialOffer();
+		specialOffer.setId(1L);
+		specialOffer.setStart(getTimeWithAdd(-2));
+		specialOffer.setStop(getTimeWithAdd(-1));
+		specialOffer.setPrice(10L);
+		specialOffer.setProduct(product);
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(any())).thenReturn(new ArrayList<>());
+
+		ShopException shopException = assertThrows(ShopException.class, () -> specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId));
+
+		assertEquals(ShopErrorTypes.SPECIAL_OFFER_NOT_FOUND, shopException.getErrorTypes());
+		verify(specialOfferRepository, times(1)).getAllByProductIdOrderByPrice(any());
+	}
+
+	@Test
+	void testGetCurrentBestSpecialOfferForProductWhenMoreThanOneExists() {
+		Long productId = 1L;
+		Product product = new Product();
+		product.setId(productId);
+		product.setName("Kayak");
+		SpecialOffer specialOffer = new SpecialOffer();
+		specialOffer.setId(1L);
+		specialOffer.setStart(getTimeWithAdd(-2));
+		specialOffer.setStop(getTimeWithAdd(1));
+		specialOffer.setPrice(10L);
+		specialOffer.setProduct(product);
+		SpecialOffer specialOffer1 = new SpecialOffer();
+		specialOffer1.setId(2L);
+		specialOffer1.setStart(getTimeWithAdd(-2));
+		specialOffer1.setStop(getTimeWithAdd(1));
+		specialOffer1.setPrice(9L);
+		specialOffer1.setProduct(product);
+		SpecialOffer specialOffer2 = new SpecialOffer();
+		specialOffer2.setId(3L);
+		specialOffer2.setStart(getTimeWithAdd(-2));
+		specialOffer2.setStop(getTimeWithAdd(1));
+		specialOffer2.setPrice(11L);
+		specialOffer2.setProduct(product);
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(any())).thenReturn(List.of(specialOffer,specialOffer1, specialOffer2));
+
+		SpecialOffer specialOfferReturned = specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId);
+
+		assertEquals(specialOffer1, specialOfferReturned);
+	}
+
+	@Test
+	void testGetCurrentBestSpecialOfferForProductWhenBestOfferAreNotTimeAvaliable() {
+		Long productId = 1L;
+		Product product = new Product();
+		product.setId(productId);
+		product.setName("Kayak");
+		SpecialOffer specialOffer = new SpecialOffer();
+		specialOffer.setId(1L);
+		specialOffer.setStart(getTimeWithAdd(-2));
+		specialOffer.setStop(getTimeWithAdd(1));
+		specialOffer.setPrice(1000L);
+		specialOffer.setProduct(product);
+		SpecialOffer specialOffer1 = new SpecialOffer();
+		specialOffer1.setId(2L);
+		specialOffer1.setStart(getTimeWithAdd(1));
+		specialOffer1.setStop(getTimeWithAdd(2));
+		specialOffer1.setPrice(9L);
+		specialOffer1.setProduct(product);
+		SpecialOffer specialOffer2 = new SpecialOffer();
+		specialOffer2.setId(3L);
+		specialOffer2.setStart(getTimeWithAdd(-2));
+		specialOffer2.setStop(getTimeWithAdd(-1));
+		specialOffer2.setPrice(11L);
+		specialOffer2.setProduct(product);
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(any())).thenReturn(List.of(specialOffer,specialOffer1, specialOffer2));
+
+		SpecialOffer specialOfferReturned = specialOfferUseCase.getCurrentBestSpecialOfferForProduct(productId);
+
+		assertEquals(specialOffer, specialOfferReturned);
 	}
 
 	@Test

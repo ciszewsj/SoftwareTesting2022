@@ -105,7 +105,17 @@ public class OrderService implements OrderUseCase {
 			if (product.getId() == null) {
 				throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
 			}
-			SpecialOffer specialOffer = specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(product.getId(), now, now)
+			SpecialOffer specialOffer = specialOfferRepository.getAllByProductIdOrderByPrice(product.getId()).stream()
+					.filter(specialOffer1 -> now.compareTo(specialOffer1.getStart()) >= 0)
+					.filter(specialOffer1 -> now.compareTo(specialOffer1.getStop()) <= 0)
+					.min((o1, o2) -> {
+						if (o1.getPrice() > o2.getPrice()) {
+							return 1;
+						} else if (o1.getPrice() == o2.getPrice()) {
+							return 0;
+						}
+						return -1;
+					})
 					.orElse(null);
 			if (specialOffer == null || specialOffer.getPrice() > product.getPrice()) {
 				price += product.getPrice();

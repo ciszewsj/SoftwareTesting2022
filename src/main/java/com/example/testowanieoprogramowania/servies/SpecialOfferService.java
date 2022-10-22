@@ -8,9 +8,11 @@ import com.example.testowanieoprogramowania.repositories.ProductRepository;
 import com.example.testowanieoprogramowania.repositories.SpecialOfferRepository;
 import com.example.testowanieoprogramowania.usecases.SpecialOfferUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SpecialOfferService implements SpecialOfferUseCase {
 	private final SpecialOfferRepository specialOfferRepository;
 	private final ProductRepository productRepository;
@@ -41,7 +44,11 @@ public class SpecialOfferService implements SpecialOfferUseCase {
 	@Override
 	public SpecialOffer getCurrentBestSpecialOfferForProduct(Long productId) {
 		Date now = new Date();
-		return specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(productId, now, now)
+		return specialOfferRepository.getAllByProductIdOrderByPrice(productId).stream()
+				.peek(specialOffer -> log.warn(specialOffer.toString()))
+				.filter(specialOffer -> now.compareTo(specialOffer.getStart()) >= 0)
+				.filter(specialOffer -> now.compareTo(specialOffer.getStop()) <= 0)
+				.min(Comparator.comparingLong(SpecialOffer::getPrice))
 				.orElseThrow(new ShopException(ShopErrorTypes.SPECIAL_OFFER_NOT_FOUND));
 	}
 

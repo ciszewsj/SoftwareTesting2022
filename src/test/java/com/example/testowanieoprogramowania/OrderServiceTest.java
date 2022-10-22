@@ -9,6 +9,7 @@ import com.example.testowanieoprogramowania.repositories.SpecialOfferRepository;
 import com.example.testowanieoprogramowania.repositories.UserRepository;
 import com.example.testowanieoprogramowania.servies.OrderService;
 import com.example.testowanieoprogramowania.usecases.OrderUseCase;
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.testowanieoprogramowania.Utils.getTimeWithAdd;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -217,7 +219,7 @@ public class OrderServiceTest {
 		order.setId(1L);
 		order.setUser(user);
 		order.setStatus(Order.Status.NOT_PAID);
-		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.of(order));
+		when(orderRepository.getOrderByStatusAndUserId(any(), anyLong())).thenReturn(Optional.of(order));
 
 		Order returnOrder = orderUseCase.getShoppingCart(userId);
 
@@ -230,7 +232,7 @@ public class OrderServiceTest {
 		User user = new User();
 		user.setId(userId);
 		Order order = null;
-		when(orderRepository.getOrderByStatusAndId(any(), anyLong())).thenReturn(Optional.empty());
+		when(orderRepository.getOrderByStatusAndUserId(any(), any())).thenReturn(Optional.empty());
 
 		Order returnOrder = orderUseCase.getShoppingCart(userId);
 
@@ -372,8 +374,8 @@ public class OrderServiceTest {
 		productC.setPrice(priceC);
 		order.getProducts().addAll(List.of(productA, productB, productC));
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any()))
-				.thenReturn(Optional.empty());
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(anyLong()))
+				.thenReturn(new ArrayList<>());
 
 		Long returnPrice = orderUseCase.getOrderPrice(orderId);
 
@@ -402,13 +404,15 @@ public class OrderServiceTest {
 		long specialOfferPriceForA = 100L;
 		SpecialOffer specialOffer = new SpecialOffer();
 		specialOffer.setId(1L);
+		specialOffer.setStart(getTimeWithAdd(-1));
+		specialOffer.setStop(getTimeWithAdd(2));
 		specialOffer.setPrice(specialOfferPriceForA);
 		specialOffer.setProduct(productA);
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any()))
-				.thenReturn(Optional.empty());
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(eq(productAId), any(), any()))
-				.thenReturn(Optional.of(specialOffer));
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(anyLong()))
+				.thenReturn(new ArrayList<>());
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(eq(productAId)))
+				.thenReturn(List.of(specialOffer));
 
 		Long returnPrice = orderUseCase.getOrderPrice(orderId);
 
@@ -439,11 +443,13 @@ public class OrderServiceTest {
 		specialOffer.setId(1L);
 		specialOffer.setPrice(specialOfferPriceForA);
 		specialOffer.setProduct(productA);
+		specialOffer.setStart(getTimeWithAdd(-1));
+		specialOffer.setStop(getTimeWithAdd(2));
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any()))
-				.thenReturn(Optional.empty());
-		when(specialOfferRepository.getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(eq(productAId), any(), any()))
-				.thenReturn(Optional.of(specialOffer));
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(anyLong()))
+				.thenReturn(new ArrayList<>());
+		when(specialOfferRepository.getAllByProductIdOrderByPrice(eq(productAId)))
+				.thenReturn(List.of(specialOffer));
 
 		Long returnPrice = orderUseCase.getOrderPrice(orderId);
 
@@ -465,7 +471,7 @@ public class OrderServiceTest {
 
 		assertEquals(ShopErrorTypes.PRODUCT_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
-		verify(specialOfferRepository, times(0)).getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any());
+		verify(specialOfferRepository, times(0)).getAllByProductIdOrderByPrice(anyLong());
 	}
 
 	@Test
@@ -490,7 +496,7 @@ public class OrderServiceTest {
 
 		assertEquals(ShopErrorTypes.ORDER_NOT_FOUND, shopException.getErrorTypes());
 		verify(orderRepository, times(1)).findById(anyLong());
-		verify(specialOfferRepository, times(0)).getTopByProductIdAndStartAfterAndStopBeforeOrderByPrice(anyLong(), any(), any());
+		verify(specialOfferRepository, times(0)).getAllByProductIdOrderByPrice(anyLong());
 	}
 }
 
