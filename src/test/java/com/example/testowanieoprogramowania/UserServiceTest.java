@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -35,7 +36,9 @@ public class UserServiceTest {
 		User user = new User();
 		user.setName("Jan");
 		user.setSurname("Pat");
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail("jjj@pw.ee");
 		user.setPassword("Secret");
 		user.setPostCode("96-330");
@@ -56,7 +59,9 @@ public class UserServiceTest {
 		User user = new User();
 		user.setName("Jan");
 		user.setSurname("Pat");
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail("jjj@pw.ee");
 		user.setPassword("Secret");
 		user.setPostCode("96-330");
@@ -78,7 +83,9 @@ public class UserServiceTest {
 		user.setId(1L);
 		user.setName(null);
 		user.setSurname(null);
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail(null);
 		user.setPassword(null);
 		user.setPostCode("96-330");
@@ -97,7 +104,9 @@ public class UserServiceTest {
 		user.setId(12L);
 		user.setName("Jan");
 		user.setSurname("Pat");
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail("jjj@pw.ee");
 		user.setPassword("Secret");
 		user.setPostCode("96-330");
@@ -114,12 +123,14 @@ public class UserServiceTest {
 	}
 
 	@Test
-	void testUpdateUserWhenNoPlayerWithId() {
+	void testUpdateUserWhenNoUserWithId() {
 		User user = new User();
 		user.setId(12L);
 		user.setName("Jan");
 		user.setSurname("Pat");
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail("jjj@pw.ee");
 		user.setPassword("Secret");
 		user.setPostCode("96-330");
@@ -141,7 +152,9 @@ public class UserServiceTest {
 		user.setId(12L);
 		user.setName(null);
 		user.setSurname(null);
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail(null);
 		user.setPassword("Secret");
 		user.setPostCode("96-330");
@@ -164,7 +177,9 @@ public class UserServiceTest {
 		user.setId(userId);
 		user.setName(null);
 		user.setSurname(null);
-		user.setBirth(new Date());
+		Calendar date = Calendar.getInstance();
+		date.set(1960, 2, 13);
+		user.setBirth(date.getTime());
 		user.setEmail(null);
 		user.setPassword("Secret");
 		user.setPostCode("96-330");

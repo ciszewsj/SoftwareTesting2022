@@ -43,7 +43,7 @@ public class ReturnServiceTest {
 	void testCreateReturn() {
 		Long orderId = 1L;
 		Order order = new Order();
-		order.setStatus(Order.Status.DELIVERD);
+		order.setStatus(Order.Status.DELIVERED);
 		order.setId(orderId);
 		String returnOrderString = "It's broken";
 		Return returnOrder = new Return();
@@ -75,7 +75,7 @@ public class ReturnServiceTest {
 	void testCreateReturnWhenReturnOrderDescriptionIsNull() {
 		Long orderId = 1L;
 		Order order = new Order();
-		order.setStatus(Order.Status.DELIVERD);
+		order.setStatus(Order.Status.DELIVERED);
 		order.setId(orderId);
 		String returnOrderString = null;
 		when(orderRepository.getOrderByStatusAndId(any(), any())).thenReturn(Optional.of(order));

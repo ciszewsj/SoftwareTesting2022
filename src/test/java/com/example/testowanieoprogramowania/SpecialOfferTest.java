@@ -203,7 +203,7 @@ public class SpecialOfferTest {
 	}
 
 	@Test
-	void testGetCurrentBestSpecialOfferForProductWhenBestOfferAreNotTimeAvaliable() {
+	void testGetCurrentBestSpecialOfferForProductWhenBestOfferAreNotTimeAvailable() {
 		Long productId = 1L;
 		Product product = new Product();
 		product.setId(productId);

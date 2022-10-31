@@ -9,7 +9,6 @@ import com.example.testowanieoprogramowania.repositories.SpecialOfferRepository;
 import com.example.testowanieoprogramowania.repositories.UserRepository;
 import com.example.testowanieoprogramowania.servies.OrderService;
 import com.example.testowanieoprogramowania.usecases.OrderUseCase;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -236,7 +235,7 @@ public class OrderServiceTest {
 
 		Order returnOrder = orderUseCase.getShoppingCart(userId);
 
-		assertEquals(order, returnOrder);
+		assertNull(returnOrder);
 	}
 
 	@Test
@@ -296,7 +295,7 @@ public class OrderServiceTest {
 	}
 
 	@ParameterizedTest
-	@EnumSource(value = Order.Status.class, names = {"NEW", "PROCESSED", "SENT", "DELIVERD"})
+	@EnumSource(value = Order.Status.class, names = {"NEW", "PROCESSED", "SENT", "DELIVERED"})
 	void testChangeOrderStatus(Order.Status status) {
 		Long orderId = 1L;
 		Order order = new Order();
@@ -312,7 +311,7 @@ public class OrderServiceTest {
 
 	@Test
 	void testChangeOrderStatusWhenStatusOfOrderIsNotPaid() {
-		Order.Status status = Order.Status.DELIVERD;
+		Order.Status status = Order.Status.DELIVERED;
 		Long orderId = 1L;
 		Order order = new Order();
 		order.setId(orderId);
@@ -344,7 +343,7 @@ public class OrderServiceTest {
 
 	@Test
 	void testChangeOrderStatusWhenOrderNotExist() {
-		Order.Status status = Order.Status.DELIVERD;
+		Order.Status status = Order.Status.DELIVERED;
 		Long orderId = 1L;
 		when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
 

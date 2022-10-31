@@ -23,7 +23,7 @@ public class ReturnService implements ReturnUseCase {
 
 	@Override
 	public Return createReturn(String returnOrder, Long orderId) {
-		Order order = orderRepository.getOrderByStatusAndId(Order.Status.DELIVERD, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
+		Order order = orderRepository.getOrderByStatusAndId(Order.Status.DELIVERED, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
 		if (returnOrder != null) {
 			Return newReturn = new Return();
 			newReturn.setDescription(returnOrder);

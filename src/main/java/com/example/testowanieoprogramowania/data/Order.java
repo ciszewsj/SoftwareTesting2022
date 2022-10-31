@@ -26,6 +26,6 @@ public class Order {
 	private List<Product> products = new ArrayList<>();
 
 	public enum Status {
-		NOT_PAID, NEW, PROCESSED, SENT, DELIVERD
+		NOT_PAID, NEW, PROCESSED, SENT, DELIVERED
 	}
 }
