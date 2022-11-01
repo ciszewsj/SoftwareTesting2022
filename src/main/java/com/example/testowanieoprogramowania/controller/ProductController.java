@@ -13,35 +13,35 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ProductController {
-	private final ProductUseCase productUseCase;
+    private final ProductUseCase productUseCase;
 
-	@GetMapping
-	public List<Product> getAllProducts() {
-		log.info("getAllProducts");
-		return productUseCase.getAllProducts();
-	}
+    @GetMapping
+    public List<Product> getAllProducts() {
+        log.info("getAllProducts");
+        return productUseCase.getAllProducts();
+    }
 
-	@GetMapping("/{productId}")
-	public Product getProduct(@PathVariable Long productId) {
-		log.info("productId: {}", productId);
-		return productUseCase.getProduct(productId);
-	}
+    @GetMapping("/{productId}")
+    public Product getProduct(@PathVariable Long productId) {
+        log.info("productId: {}", productId);
+        return productUseCase.getProduct(productId);
+    }
 
-	@PostMapping
-	public Product createProduct(@RequestBody Product product) {
-		log.info("createProduct: {}", product);
-		return productUseCase.createProduct(product);
-	}
+    @PostMapping
+    public Product createProduct(@RequestBody Product product) {
+        log.info("createProduct: {}", product);
+        return productUseCase.createProduct(product);
+    }
 
-	@PutMapping
-	public void updateProduct(@RequestBody Product product) {
-		log.info("updateProduct: {}", product);
-		productUseCase.updateProduct(product);
-	}
+    @PutMapping
+    public void updateProduct(@RequestBody Product product) {
+        log.info("updateProduct: {}", product);
+        productUseCase.updateProduct(product);
+    }
 
-	@DeleteMapping("/{productId}")
-	public void deleteProduct(@PathVariable Long productId) {
-		log.info("deleteProduct: {}", productId);
-		productUseCase.deleteProduct(productId);
-	}
+    @DeleteMapping("/{productId}")
+    public void deleteProduct(@PathVariable Long productId) {
+        log.info("deleteProduct: {}", productId);
+        productUseCase.deleteProduct(productId);
+    }
 }

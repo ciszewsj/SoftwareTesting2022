@@ -9,39 +9,39 @@ import java.util.Date;
 @Data
 @Table(name = "users")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(length = 50)
-	private String name;
+    @Column(length = 50)
+    private String name;
 
-	@Column(length = 50)
-	private String surname;
+    @Column(length = 50)
+    private String surname;
 
-	private Date birth;
+    private Date birth;
 
-	@Column(length = 50)
-	private String email;
+    @Column(length = 50)
+    private String email;
 
-	@Column(length = 50)
-	private String password;
+    @Column(length = 50)
+    private String password;
 
-	@Column(length = 50)
-	private String city;
+    @Column(length = 50)
+    private String city;
 
-	@Column(length = 50)
-	private String street;
+    @Column(length = 50)
+    private String street;
 
-	@Column(length = 50)
-	private String country;
+    @Column(length = 50)
+    private String country;
 
-	@Column(length = 6)
-	private String postCode;
+    @Column(length = 6)
+    private String postCode;
 
-	private UserRole role;
+    private UserRole role;
 
-	public enum UserRole {
-		USER, ADMIN
-	}
+    public enum UserRole {
+        USER, ADMIN
+    }
 }

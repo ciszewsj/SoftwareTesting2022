@@ -16,42 +16,42 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService implements ProductUseCase {
 
-	private final ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-	@Override
-	public Product getProduct(Long productId) {
-		return productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
+    @Override
+    public Product getProduct(Long productId) {
+        return productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
 
-	}
+    }
 
-	@Override
-	public List<Product> getAllProducts() {
-		return productRepository.findAll();
-	}
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
 
-	@Override
-	public Product createProduct(Product product) {
-		if (product.getId() != null || product.getPrice() <= 0) {
-			throw new ShopException(ShopErrorTypes.ILLEGAL_REQUEST_BODY);
-		}
-		return productRepository.save(product);
-	}
+    @Override
+    public Product createProduct(Product product) {
+        if (product.getId() != null || product.getPrice() <= 0) {
+            throw new ShopException(ShopErrorTypes.ILLEGAL_REQUEST_BODY);
+        }
+        return productRepository.save(product);
+    }
 
-	@Override
-	public void updateProduct(Product product) {
-		if (product.getPrice() == null || product.getPrice() <= 0) {
-			throw new ShopException(ShopErrorTypes.ILLEGAL_REQUEST_BODY);
-		}
-		if (productRepository.getProductById(product.getId()).isPresent()) {
-			productRepository.save(product);
-		} else {
-			throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
-		}
-	}
+    @Override
+    public void updateProduct(Product product) {
+        if (product.getPrice() == null || product.getPrice() <= 0) {
+            throw new ShopException(ShopErrorTypes.ILLEGAL_REQUEST_BODY);
+        }
+        if (productRepository.getProductById(product.getId()).isPresent()) {
+            productRepository.save(product);
+        } else {
+            throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
+        }
+    }
 
-	@Override
-	public void deleteProduct(Long productId) {
-		Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
-		productRepository.delete(product);
-	}
+    @Override
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
+        productRepository.delete(product);
+    }
 }

@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class LongProductIdRequestBody {
-	Long productId;
+    Long productId;
 }

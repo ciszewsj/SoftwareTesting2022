@@ -8,18 +8,18 @@ import java.util.Date;
 @Entity
 @Data
 public class SpecialOffer {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Temporal(TemporalType.DATE)
-	private Date start;
-	
-	@Temporal(TemporalType.DATE)
-	private Date stop;
+    @Temporal(TemporalType.DATE)
+    private Date start;
 
-	private long price;
+    @Temporal(TemporalType.DATE)
+    private Date stop;
 
-	@OneToOne
-	private Product product;
+    private long price;
+
+    @OneToOne
+    private Product product;
 }

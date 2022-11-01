@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ReturnRepository extends JpaRepository<Return, Long> {
 
-	List<Return> getAllByOrderUserId(Long useId);
+    List<Return> getAllByOrderUserId(Long useId);
 }

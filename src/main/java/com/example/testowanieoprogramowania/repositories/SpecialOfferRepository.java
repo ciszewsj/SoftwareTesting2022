@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SpecialOfferRepository extends JpaRepository<SpecialOffer, Long> {
-	List<SpecialOffer> getAllByProductIdOrderByPrice(Long productId);
+    List<SpecialOffer> getAllByProductIdOrderByPrice(Long productId);
 }

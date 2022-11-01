@@ -5,9 +5,9 @@ import com.example.testowanieoprogramowania.data.Return;
 import java.util.List;
 
 public interface ReturnUseCase {
-	Return createReturn(String returnOrder, Long order);
+    Return createReturn(String returnOrder, Long order);
 
-	List<Return> getReturns(Long user);
+    List<Return> getReturns(Long user);
 
-	void changeReturnStatus(Long returnOrder, Return.ReturnStatus returnStatus);
+    void changeReturnStatus(Long returnOrder, Return.ReturnStatus returnStatus);
 }

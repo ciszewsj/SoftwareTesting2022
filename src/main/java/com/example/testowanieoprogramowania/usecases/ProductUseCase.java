@@ -5,15 +5,15 @@ import com.example.testowanieoprogramowania.data.Product;
 import java.util.List;
 
 public interface ProductUseCase {
-	Product getProduct(Long productId);
+    Product getProduct(Long productId);
 
-	List<Product> getAllProducts();
+    List<Product> getAllProducts();
 
-	Product createProduct(Product product);
+    Product createProduct(Product product);
 
-	void updateProduct(Product product);
+    void updateProduct(Product product);
 
-	void deleteProduct(Long product);
+    void deleteProduct(Long product);
 
 
 }

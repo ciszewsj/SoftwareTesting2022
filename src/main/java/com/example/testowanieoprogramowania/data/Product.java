@@ -10,24 +10,24 @@ import javax.persistence.Id;
 @Entity
 @Data
 public class Product {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private String description;
+    private String description;
 
-	private Long price;
+    private Long price;
 
-	private Integer amount;
+    private Integer amount;
 
-	public void getFromShelf() {
-		if (amount > 0) {
-			amount--;
-		} else {
-			throw new IllegalStateException();
-		}
-	}
+    public void getFromShelf() {
+        if (amount > 0) {
+            amount--;
+        } else {
+            throw new IllegalStateException();
+        }
+    }
 
 }

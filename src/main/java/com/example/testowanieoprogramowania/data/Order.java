@@ -11,21 +11,21 @@ import java.util.List;
 @Data
 @Table(name = "order_table")
 public class Order {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private Status status;
+    private Status status;
 
-	private Date paid;
+    private Date paid;
 
-	@OneToOne
-	private User user;
+    @OneToOne
+    private User user;
 
-	@ManyToMany
-	private List<Product> products = new ArrayList<>();
+    @ManyToMany
+    private List<Product> products = new ArrayList<>();
 
-	public enum Status {
-		NOT_PAID, NEW, PROCESSED, SENT, DELIVERED
-	}
+    public enum Status {
+        NOT_PAID, NEW, PROCESSED, SENT, DELIVERED
+    }
 }

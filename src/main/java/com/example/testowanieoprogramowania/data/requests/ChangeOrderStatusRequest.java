@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class ChangeOrderStatusRequest {
-	Order.Status status;
+    Order.Status status;
 }

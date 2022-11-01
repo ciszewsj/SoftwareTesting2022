@@ -10,21 +10,21 @@ import java.util.function.Supplier;
 @Slf4j
 public class ShopException extends RuntimeException implements Supplier<RuntimeException> {
 
-	@Getter
-	private ShopErrorTypes errorTypes;
+    @Getter
+    private ShopErrorTypes errorTypes;
 
-	public ShopException(ShopErrorTypes errorTypes) {
-		super();
-		this.errorTypes = errorTypes;
-	}
+    public ShopException(ShopErrorTypes errorTypes) {
+        super();
+        this.errorTypes = errorTypes;
+    }
 
-	@Override
-	public RuntimeException get() {
-		return this;
-	}
+    @Override
+    public RuntimeException get() {
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return "Shop Exception with type : %s".formatted(errorTypes.toString());
-	}
+    @Override
+    public String toString() {
+        return "Shop Exception with type : %s".formatted(errorTypes.toString());
+    }
 }

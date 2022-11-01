@@ -26,103 +26,103 @@ import java.util.List;
 @Slf4j
 public class OrderService implements OrderUseCase {
 
-	private final ProductRepository productRepository;
-	private final OrderRepository orderRepository;
-	private final UserRepository userRepository;
-	private final SpecialOfferRepository specialOfferRepository;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final SpecialOfferRepository specialOfferRepository;
 
-	@Override
-	public void addProductToOrder(Long productId, Long userId) {
-		User user = userRepository.findById(userId).orElseThrow(new ShopException(ShopErrorTypes.USER_NOT_FOUND));
-		Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
-		Order order = orderRepository.getOrderByStatusAndUserId(Order.Status.NOT_PAID, user.getId()).orElseGet(() -> {
-			Order newOrder = new Order();
-			newOrder.setProducts(new ArrayList<>());
-			newOrder.setUser(user);
-			newOrder.setStatus(Order.Status.NOT_PAID);
-			newOrder.setProducts(new ArrayList<>());
-			return newOrder;
-		});
-		order.getProducts().add(product);
-		orderRepository.save(order);
+    @Override
+    public void addProductToOrder(Long productId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(new ShopException(ShopErrorTypes.USER_NOT_FOUND));
+        Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
+        Order order = orderRepository.getOrderByStatusAndUserId(Order.Status.NOT_PAID, user.getId()).orElseGet(() -> {
+            Order newOrder = new Order();
+            newOrder.setProducts(new ArrayList<>());
+            newOrder.setUser(user);
+            newOrder.setStatus(Order.Status.NOT_PAID);
+            newOrder.setProducts(new ArrayList<>());
+            return newOrder;
+        });
+        order.getProducts().add(product);
+        orderRepository.save(order);
 
-	}
+    }
 
-	@Override
-	public void deleteProductFromOrder(Long productId, Long orderId) {
-		Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
-		Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
-		if (!order.getProducts().contains(product)) {
-			throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
-		}
-		order.getProducts().remove(product);
-		orderRepository.save(order);
-	}
+    @Override
+    public void deleteProductFromOrder(Long productId, Long orderId) {
+        Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
+        Product product = productRepository.getProductById(productId).orElseThrow(new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND));
+        if (!order.getProducts().contains(product)) {
+            throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
+        }
+        order.getProducts().remove(product);
+        orderRepository.save(order);
+    }
 
-	@Override
-	public List<Order> getAllOrders() {
-		return orderRepository.findAll();
-	}
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
 
-	@Override
-	public Order getShoppingCart(Long user) {
-		return orderRepository.getOrderByStatusAndUserId(Order.Status.NOT_PAID, user).orElse(null);
-	}
+    @Override
+    public Order getShoppingCart(Long user) {
+        return orderRepository.getOrderByStatusAndUserId(Order.Status.NOT_PAID, user).orElse(null);
+    }
 
-	@Override
-	public void payForOrder(Long orderId) {
-		Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
-		for (Product product : order.getProducts()) {
-			try {
-				product.getFromShelf();
-			} catch (IllegalStateException e) {
-				throw new ShopException(ShopErrorTypes.PRODUCT_NOT_AVALIABLE);
-			}
-			productRepository.save(product);
-		}
-		order.setStatus(Order.Status.NEW);
-		order.setPaid(new Date());
-		orderRepository.save(order);
-	}
+    @Override
+    public void payForOrder(Long orderId) {
+        Order order = orderRepository.getOrderByStatusAndId(Order.Status.NOT_PAID, orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
+        for (Product product : order.getProducts()) {
+            try {
+                product.getFromShelf();
+            } catch (IllegalStateException e) {
+                throw new ShopException(ShopErrorTypes.PRODUCT_NOT_AVALIABLE);
+            }
+            productRepository.save(product);
+        }
+        order.setStatus(Order.Status.NEW);
+        order.setPaid(new Date());
+        orderRepository.save(order);
+    }
 
-	@Override
-	public void changeOrderStatus(Long orderId, Order.Status status) {
-		Order order = orderRepository.findById(orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
-		if (order.getStatus() != Order.Status.NOT_PAID && status != Order.Status.NOT_PAID) {
-			order.setStatus(status);
-			orderRepository.save(order);
-		} else {
-			throw new ShopException(ShopErrorTypes.ILLEGAL_CHANGE_PRODUCT_STATUS);
-		}
-	}
+    @Override
+    public void changeOrderStatus(Long orderId, Order.Status status) {
+        Order order = orderRepository.findById(orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
+        if (order.getStatus() != Order.Status.NOT_PAID && status != Order.Status.NOT_PAID) {
+            order.setStatus(status);
+            orderRepository.save(order);
+        } else {
+            throw new ShopException(ShopErrorTypes.ILLEGAL_CHANGE_PRODUCT_STATUS);
+        }
+    }
 
-	@Override
-	public Long getOrderPrice(Long orderId) {
-		Order order = orderRepository.findById(orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
-		Date now = new Date();
-		long price = 0;
-		for (Product product : order.getProducts()) {
-			if (product.getId() == null) {
-				throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
-			}
-			SpecialOffer specialOffer = specialOfferRepository.getAllByProductIdOrderByPrice(product.getId()).stream()
-					.filter(specialOffer1 -> now.compareTo(specialOffer1.getStart()) >= 0)
-					.filter(specialOffer1 -> now.compareTo(specialOffer1.getStop()) <= 0)
-					.min((o1, o2) -> {
-						if (o1.getPrice() > o2.getPrice()) {
-							return 1;
-						} else if (o1.getPrice() == o2.getPrice()) {
-							return 0;
-						}
-						return -1;
-					})
-					.orElse(null);
-			if (specialOffer == null || specialOffer.getPrice() > product.getPrice()) {
-				price += product.getPrice();
-			} else {
-				price += specialOffer.getPrice();
-			}
-		}
-		return price;
-	}
+    @Override
+    public Long getOrderPrice(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(new ShopException(ShopErrorTypes.ORDER_NOT_FOUND));
+        Date now = new Date();
+        long price = 0;
+        for (Product product : order.getProducts()) {
+            if (product.getId() == null) {
+                throw new ShopException(ShopErrorTypes.PRODUCT_NOT_FOUND);
+            }
+            SpecialOffer specialOffer = specialOfferRepository.getAllByProductIdOrderByPrice(product.getId()).stream()
+                    .filter(specialOffer1 -> now.compareTo(specialOffer1.getStart()) >= 0)
+                    .filter(specialOffer1 -> now.compareTo(specialOffer1.getStop()) <= 0)
+                    .min((o1, o2) -> {
+                        if (o1.getPrice() > o2.getPrice()) {
+                            return 1;
+                        } else if (o1.getPrice() == o2.getPrice()) {
+                            return 0;
+                        }
+                        return -1;
+                    })
+                    .orElse(null);
+            if (specialOffer == null || specialOffer.getPrice() > product.getPrice()) {
+                price += product.getPrice();
+            } else {
+                price += specialOffer.getPrice();
+            }
+        }
+        return price;
+    }
 }
