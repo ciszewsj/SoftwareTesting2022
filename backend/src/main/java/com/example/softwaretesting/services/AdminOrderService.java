@@ -1,7 +1,6 @@
 package com.example.softwaretesting.services;
 
 import com.example.softwaretesting.data.entity.Cart;
-import com.example.softwaretesting.data.request.SendOrderRequest;
 import com.example.softwaretesting.exception.ParametrizedException;
 import com.example.softwaretesting.repositories.CartRepository;
 import com.example.softwaretesting.usecase.AdminOrderUseCase;
@@ -25,8 +24,13 @@ public class AdminOrderService implements AdminOrderUseCase {
 	}
 
 	@Override
-	public void sendOrder(SendOrderRequest request) {
-		Cart order = cartRepository.findByIdAndStatus(request.getOrderId(), Cart.Status.PAID).orElseThrow(new ParametrizedException(ParametrizedException.Status.ORDER_NOT_FOUND));
+	public Cart getOrder(Long id) {
+		return cartRepository.findByIdAndStatusOrStatus(id, Cart.Status.PAID, Cart.Status.SENT).orElseThrow(new ParametrizedException(ParametrizedException.Status.ORDER_NOT_FOUND));
+	}
+
+	@Override
+	public void sendOrder(Long id) {
+		Cart order = cartRepository.findByIdAndStatus(id, Cart.Status.PAID).orElseThrow(new ParametrizedException(ParametrizedException.Status.ORDER_NOT_FOUND));
 		order.setStatus(Cart.Status.SENT);
 		cartRepository.save(order);
 	}

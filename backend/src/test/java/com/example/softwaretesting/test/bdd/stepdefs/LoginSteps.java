@@ -18,10 +18,8 @@ public class LoginSteps extends AbstractSteps implements En {
 
 	public LoginSteps() {
 
-		Given("user wants to login using credentials", (DataTable employeeDt) -> {
-			testContext().reset();
-			List<LoginRequest> loginRequests = employeeDt.asList(LoginRequest.class);
-
+		Given("user wants to login using credentials", (DataTable loginData) -> {
+			List<LoginRequest> loginRequests = loginData.asList(LoginRequest.class);
 			super.testContext()
 					.setPayload(loginRequests.get(0));
 		});
@@ -29,16 +27,14 @@ public class LoginSteps extends AbstractSteps implements En {
 
 		When("user login to site with credential", () -> {
 			String createEmployeeUrl = "/auth/login";
-
 			executePost(createEmployeeUrl);
 		});
 
 		And("returned token is not null", () -> {
 			Response response = testContext().getResponse();
-			log.error("THIS IS STRANGE {} ", response.getBody().as(LoginResponse.class));
-			log.error("THIS IS STRANGE {} ", response.getBody().toString());
 			LoginResponse loginResponse = response.getBody().as(LoginResponse.class);
 			assertThat(loginResponse.getToken() != null && !Objects.equals(loginResponse.getToken(), ""));
+			super.testContext().set("AUTH", loginResponse.getToken());
 		});
 
 	}

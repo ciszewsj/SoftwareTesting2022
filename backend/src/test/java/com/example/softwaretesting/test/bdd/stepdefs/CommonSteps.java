@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.fail;
 
 public class CommonSteps extends AbstractSteps implements En {
 	public CommonSteps() {
+
 		Then("the status {string}", (String expectedResult) -> {
 			Response response = testContext().getResponse();
 
@@ -17,6 +18,9 @@ public class CommonSteps extends AbstractSteps implements En {
 					break;
 				case "HANDLE_FAILS":
 					assertThat(response.statusCode()).isBetween(400, 409);
+					break;
+				case "UNAUTHORIZED":
+					assertThat(response.statusCode()).isEqualTo(403);
 					break;
 				default:
 					fail("Unexpected error");

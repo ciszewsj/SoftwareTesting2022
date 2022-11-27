@@ -6,13 +6,10 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
-public class CreateProductRequest {
+public class AddCommentRequest {
+	private Long productId;
 
 	@Size(max = 100)
 	@NotEmpty
-	private String name;
-
-	private Long price;
-
-	private Boolean available = true;
+	private String comment;
 }

@@ -1,4 +1,5 @@
 Feature: REGISTER
+  AS NOT LOGGED IN USER I WOULD LIKE TO REGISTER IN APPLICATION
 
   Scenario: USER CREATE ACCOUNT
 
@@ -23,6 +24,7 @@ Feature: REGISTER
 
     When user register with credential
     Then the status 'HANDLE_FAILS'
+
 
   Scenario: USER CREATE ACCOUNT WITH NOT EMPTY DATA
 

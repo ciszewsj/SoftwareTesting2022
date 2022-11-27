@@ -30,8 +30,11 @@ public class ParametrizedException extends RuntimeException implements Supplier<
 	public enum Status {
 		USER_NOT_FOUND,
 		USER_ALREADY_EXISTS,
+		PRODUCT_IN_CART_IS_NOT_AVAILABLE,
+		PRODUCT_IS_NOT_IN_CART,
 		PRODUCT_NOT_FOUND,
-		ORDER_NOT_FOUND
+		ORDER_NOT_FOUND,
+		WRONG_DATA
 	}
 
 	@Override

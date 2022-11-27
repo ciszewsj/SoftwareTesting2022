@@ -2,11 +2,11 @@ package com.example.softwaretesting.controller;
 
 import com.example.softwaretesting.data.entity.Item;
 import com.example.softwaretesting.data.request.CreateProductRequest;
-import com.example.softwaretesting.data.request.DeleteProductRequest;
-import com.example.softwaretesting.data.request.SetProductAvailableRequest;
+import com.example.softwaretesting.exception.ParametrizedException;
 import com.example.softwaretesting.usecase.AdminProductUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,25 +17,33 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/admin/product")
 public class AdminProductController {
-	AdminProductUseCase useCase;
+	private final AdminProductUseCase useCase;
 
 	@PostMapping
-	public void addProduct(@RequestBody @Valid CreateProductRequest request) {
-		useCase.create(request);
+	public Long addProduct(@RequestBody @Valid CreateProductRequest request) {
+		if (request.getPrice() < 0) {
+			throw new ParametrizedException(HttpStatus.BAD_REQUEST, ParametrizedException.Status.WRONG_DATA);
+		}
+		return useCase.create(request);
 	}
 
 	@PutMapping
-	public void setProductAvailable(@RequestBody SetProductAvailableRequest request) {
-		useCase.setAvailable(request);
+	public void setProductAvailable(@PathVariable("id") Long id) {
+		useCase.setAvailable(id);
 	}
 
 	@DeleteMapping
-	public void deleteProduct(@RequestBody DeleteProductRequest request) {
-		useCase.deleteProduct(request);
+	public void deleteProduct(@PathVariable("id") Long id) {
+		useCase.deleteProduct(id);
 	}
 
 	@GetMapping
 	public List<Item> getProducts() {
 		return useCase.getAllProducts();
+	}
+
+	@GetMapping("/{id}")
+	public Item getProduct(@PathVariable("id") Long id) {
+		return useCase.getProduct(id);
 	}
 }
