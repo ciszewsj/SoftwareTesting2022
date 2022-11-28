@@ -8,11 +8,11 @@
         <version>2.7.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>ProgramowanieAplickacjiWebowychIMobilnych</artifactId>
+    <groupId>ee.ciszewsj</groupId>
+    <artifactId>KajakShop</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ProgramowanieAplickacjiWebowychIMobilnych</name>
-    <description>ProgramowanieAplickacjiWebowychIMobilnych</description>
+    <name>KajakShop</name>
+    <description>Software testing</description>
     <properties>
         <java.version>1.8</java.version>
     </properties>
@@ -60,21 +60,16 @@
         </dependency>
 
 
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
 
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
 
 
         <dependency>
@@ -87,7 +82,7 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.13</version>
         </dependency>
-<!---->
+        <!---->
 
         <!-- To generate getters, setters, equals, hascode, toString methods -->
 
@@ -98,7 +93,6 @@
             <artifactId>mapstruct-jdk8</artifactId>
             <version>1.2.0.Final</version>
         </dependency>
-
 
 
         <dependency>
