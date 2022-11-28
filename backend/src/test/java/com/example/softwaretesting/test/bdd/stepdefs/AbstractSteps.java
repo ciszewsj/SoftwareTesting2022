@@ -207,6 +207,7 @@ public class AbstractSteps {
 		final Object auth = CONTEXT.get("AUTH");
 
 		if (null != auth) {
+			log.error("AUTH : {}", auth);
 			String authToken = "Bearer " + auth;
 			request.headers("Authorization", authToken);
 		}

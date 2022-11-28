@@ -26,6 +26,11 @@ public class CommonSteps extends AbstractSteps implements En {
 					fail("Unexpected error");
 			}
 		});
+
+		Then("user load product", () -> {
+			int id = super.testContext().get("productId", Integer.class);
+			executeGet("/product/" + id);
+		});
 	}
 
 }

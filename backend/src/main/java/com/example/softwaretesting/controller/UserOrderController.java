@@ -18,7 +18,6 @@ public class UserOrderController {
 	private final UserOrderUseCase useCase;
 
 	@GetMapping
-
 	public void getOrders(@AuthenticationPrincipal ServiceUser user) {
 		useCase.getOrders(user);
 	}

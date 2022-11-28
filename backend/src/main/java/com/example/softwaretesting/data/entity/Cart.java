@@ -22,7 +22,7 @@ public class Cart {
 
 	private Status status;
 
-	@OneToMany
+	@ManyToMany(cascade = {CascadeType.ALL})
 	private List<CartItem> items;
 
 	public Cart(ServiceUser user) {

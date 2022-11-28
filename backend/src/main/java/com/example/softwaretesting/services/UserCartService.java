@@ -42,8 +42,10 @@ public class UserCartService implements UserCartUseCase {
 	public void putItemToCart(ServiceUser user, PutItemToCartRequest request) {
 		Cart cart = getUserCart(user);
 		Item item = itemRepository.findByIdAndStatus(request.getProductId(), Item.Status.AVAILABLE).orElseThrow(new ParametrizedException(ParametrizedException.Status.PRODUCT_NOT_FOUND));
-		CartItem cartItem = cart.getItems().stream().filter(cartItem2 -> cartItem2.getItem().equals(item)).findFirst().orElse(new CartItem(item));
+		CartItem cartItem = cart.getItems().stream().filter(cartItem2 -> cartItem2.getItem().equals(item)).findFirst().orElseGet(() -> new CartItem(item));
 		Integer numberOfItems = cartItem.addNumberOfItems(request.getNumberOfItems());
+		cart.getItems().stream().filter(c -> c.getId().equals(cartItem.getId())).findFirst().ifPresent(cartToUpdate -> cart.getItems().remove(cartToUpdate));
+		cart.getItems().add(cartItem);
 		if (numberOfItems <= 0) {
 			cart.getItems().remove(cartItem);
 		}

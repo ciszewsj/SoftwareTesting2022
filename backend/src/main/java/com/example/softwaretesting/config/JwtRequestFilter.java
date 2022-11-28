@@ -60,9 +60,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 			UserDetails userDetails = findUserByName(username);
 			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
-//				userDetails.getAuthorities().forEach(e -> log.error("ROLES : {}", e.getAuthority()));
 				Collection<? extends GrantedAuthority> authorities = customerRepository.findUserRoles(username);
-				authorities.forEach(e -> log.error("YESSSS : {}", e.getAuthority()));
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, authorities);
 				usernamePasswordAuthenticationToken
@@ -70,6 +68,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 			}
 		}
+		log.error("USER : {}", username);
 		chain.doFilter(request, response);
 	}
 

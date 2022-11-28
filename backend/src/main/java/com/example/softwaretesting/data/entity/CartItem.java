@@ -3,6 +3,7 @@ package com.example.softwaretesting.data.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 
@@ -10,12 +11,13 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Slf4j
 public class CartItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private Item item;
 
 	private Integer numberOfItems;
@@ -26,7 +28,8 @@ public class CartItem {
 	}
 
 	public Integer addNumberOfItems(Integer number) {
-		numberOfItems += number;
+		log.error("Number of product is {} + {}", numberOfItems, number);
+		numberOfItems = numberOfItems + number;
 		if (numberOfItems < 0) {
 			numberOfItems = 0;
 		}

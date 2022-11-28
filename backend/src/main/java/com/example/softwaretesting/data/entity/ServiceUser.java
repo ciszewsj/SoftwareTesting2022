@@ -1,9 +1,11 @@
 package com.example.softwaretesting.data.entity;
 
+import com.example.softwaretesting.data.serializer.ServiceUserMapper;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +16,8 @@ import java.util.HashSet;
 @Entity
 @Setter
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(using = ServiceUserMapper.class)
 public class ServiceUser implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +30,7 @@ public class ServiceUser implements UserDetails {
 	@Length(max = 100)
 	private String password;
 
-	@ManyToMany
+	@ManyToMany(cascade = {CascadeType.ALL})
 	private Collection<Role> roles = new HashSet<>();
 
 	public ServiceUser() {

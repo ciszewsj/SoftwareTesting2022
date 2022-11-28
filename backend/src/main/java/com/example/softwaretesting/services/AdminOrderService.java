@@ -32,6 +32,7 @@ public class AdminOrderService implements AdminOrderUseCase {
 	public void sendOrder(Long id) {
 		Cart order = cartRepository.findByIdAndStatus(id, Cart.Status.PAID).orElseThrow(new ParametrizedException(ParametrizedException.Status.ORDER_NOT_FOUND));
 		order.setStatus(Cart.Status.SENT);
+		log.error("oreder status {} ", order.getStatus());
 		cartRepository.save(order);
 	}
 }

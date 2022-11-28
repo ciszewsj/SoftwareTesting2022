@@ -1,9 +1,12 @@
 package com.example.softwaretesting.controller;
 
+import com.example.softwaretesting.data.entity.Cart;
 import com.example.softwaretesting.usecase.AdminOrderUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -13,13 +16,13 @@ public class AdminOrderController {
 	private final AdminOrderUseCase useCase;
 
 	@GetMapping
-	public void getOrders() {
-		useCase.getAllOrders();
+	public List<Cart> getOrders() {
+		return useCase.getAllOrders();
 	}
 
 	@GetMapping("/{id}")
-	public void getOrder(@PathVariable("id") Long id) {
-		useCase.getOrder(id);
+	public Cart getOrder(@PathVariable("id") Long id) {
+		return useCase.getOrder(id);
 	}
 
 	@PutMapping("/{id}")

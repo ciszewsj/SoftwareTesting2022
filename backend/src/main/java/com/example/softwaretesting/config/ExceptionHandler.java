@@ -16,7 +16,7 @@ ExceptionHandler {
 		return ResponseEntity.status(parametrizedException.getStatus())
 				.body(ErrorResponse.builder()
 						.code(parametrizedException.getStatus().toString())
-						.message(parametrizedException.getMessage())
+						.message(parametrizedException.getError().toString())
 						.build());
 	}
 

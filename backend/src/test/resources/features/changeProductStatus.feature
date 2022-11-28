@@ -6,16 +6,16 @@ Feature: CHANGE_PRODUCT_STATUS
       | username | password |
       | admin    | password |
 
-    When user login to site with credential
-    Then the status 'IS SUCCESSFUL'
+    And user login to site with credential
+    And the status 'IS SUCCESSFUL'
     And returned token is not null
 
-    Given admin wants to create new product using data
+    And admin wants to create new product using data
       | name          | price |
       | added_product | 1000  |
 
-    When admin creates new product
-    Then the status 'IS SUCCESSFUL'
+    And admin creates new product
+    And the status 'IS SUCCESSFUL'
     And admin get product data
     And admin check added product data
 
@@ -23,13 +23,18 @@ Feature: CHANGE_PRODUCT_STATUS
     Given admin get product data
     And admin check if product is "AVAILABLE"
     When admin change product status to "NOT_AVAILABLE"
+    And the status "IS SUCCESSFUL"
     Then admin get product data
     And admin check if product is "NOT_AVAILABLE"
 
   Scenario: ADMIN SET STATUS OF NOT AVAILABLE PRODUCT TO AVAILABLE
-    Given admin get product data
+    Given admin change product status to "NOT_AVAILABLE"
+    And the status 'IS SUCCESSFUL'
+    And admin get product data
+    And the status 'IS SUCCESSFUL'
     And admin check if product is "NOT_AVAILABLE"
     When admin change product status to "AVAILABLE"
+    And the status 'IS SUCCESSFUL'
     Then admin get product data
     And admin check if product is "AVAILABLE"
 
@@ -40,5 +45,8 @@ Feature: CHANGE_PRODUCT_STATUS
 
     And user login to site with credential
     And the status 'IS SUCCESSFUL'
-    When admin change product status to "AVAILABLE"
+    And returned token is not null
+    When admin change product status to "NOT_AVAILABLE"
+    Then the status "HANDLE_FAILS"
+    And admin get product data
     Then the status "HANDLE_FAILS"

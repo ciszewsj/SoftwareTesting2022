@@ -67,15 +67,9 @@ public class CreateProductSteps extends AbstractSteps implements En {
 		});
 
 		And("admin check if product is {string}", (String expectedStatus) -> {
-			int productId = super.testContext().get("productId", Integer.class);
-			switch (expectedStatus) {
-				case "AVAILABLE":
-					break;
-				case "NOT_AVAILABLE":
-					break;
-				default:
-					fail("Unexpected error");
-			}
+			Item product = super.testContext().getResponse().getBody().as(Item.class);
+			log.error("Product status : {}", product.getStatus().toString());
+			assertEquals(expectedStatus, product.getStatus().toString());
 		});
 	}
 }

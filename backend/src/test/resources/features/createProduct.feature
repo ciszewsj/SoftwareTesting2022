@@ -6,8 +6,8 @@ Feature: CREATE_PRODUCT
       | username | password |
       | admin    | password |
 
-    When user login to site with credential
-    Then the status 'IS SUCCESSFUL'
+    And user login to site with credential
+    And the status 'IS SUCCESSFUL'
     And returned token is not null
 
   Scenario: ADMIN CREATE PRODUCT

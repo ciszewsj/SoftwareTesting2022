@@ -27,12 +27,12 @@ public class AdminProductController {
 		return useCase.create(request);
 	}
 
-	@PutMapping
+	@PutMapping("/{id}")
 	public void setProductAvailable(@PathVariable("id") Long id) {
 		useCase.setAvailable(id);
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public void deleteProduct(@PathVariable("id") Long id) {
 		useCase.deleteProduct(id);
 	}

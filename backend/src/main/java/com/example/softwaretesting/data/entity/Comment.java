@@ -1,5 +1,6 @@
 package com.example.softwaretesting.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,13 +11,14 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
 @NoArgsConstructor
 public class Comment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private ServiceUser user;
 
 	@Length(max = 100)

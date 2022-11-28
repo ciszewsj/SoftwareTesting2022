@@ -1,6 +1,8 @@
 package com.example.softwaretesting.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
+@NoArgsConstructor
 public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,12 +27,8 @@ public class Item {
 
 	private Status status;
 
-	@OneToMany
-	private List<Comment> comments;
-
-	public Item() {
-		this.comments = new ArrayList<>();
-	}
+	@OneToMany(cascade = {CascadeType.ALL})
+	private List<Comment> comments = new ArrayList<>();
 
 	public enum Status {
 		AVAILABLE, NOT_AVAILABLE

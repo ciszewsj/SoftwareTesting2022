@@ -1,5 +1,6 @@
 package com.example.softwaretesting.controller;
 
+import com.example.softwaretesting.data.entity.Cart;
 import com.example.softwaretesting.data.entity.ServiceUser;
 import com.example.softwaretesting.data.request.DeleteItemFromCartRequest;
 import com.example.softwaretesting.data.request.PutItemToCartRequest;
@@ -26,8 +27,8 @@ public class UserCartController {
 	}
 
 	@GetMapping
-	public void getCart(@AuthenticationPrincipal ServiceUser user) {
-		useCase.getCart(user);
+	public Cart getCart(@AuthenticationPrincipal ServiceUser user) {
+		return useCase.getCart(user);
 	}
 
 	@PutMapping

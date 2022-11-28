@@ -20,6 +20,7 @@ public class UserCommentController {
 	@PostMapping
 	public void createComment(@AuthenticationPrincipal ServiceUser user,
 	                          @RequestBody @Valid AddCommentRequest request) {
+		log.error(user.getUsername());
 		useCase.addComment(user, request);
 	}
 }

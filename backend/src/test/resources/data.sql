@@ -7,3 +7,5 @@ INSERT INTO SERVICE_USER_ROLES (service_user_id, roles_id)
 VALUES (1, 2);
 INSERT INTO SERVICE_USER_ROLES (service_user_id, roles_id)
 VALUES (2, 1);
+INSERT INTO SERVICE_USER_ROLES (service_user_id, roles_id)
+VALUES (2, 2);
