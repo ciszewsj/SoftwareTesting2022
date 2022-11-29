@@ -62,8 +62,8 @@ Feature: SEND_ORDER
 
     And admin find order of player "sender"
     And admin valid status is "PAID"
-    Then admin sent order
-    And the status 'IS SUCCESSFUL'
+    When admin sent order
+    Then the status 'IS SUCCESSFUL'
 
     And admin load order data
     And the status 'IS SUCCESSFUL'
