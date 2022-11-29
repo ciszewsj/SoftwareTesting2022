@@ -1,5 +1,5 @@
 export let RegisterRequest = (fields, setErrorFields, setError) => {
-    fetch('http://localhost:8080/api/customer/register',
+    fetch('http://localhost:8070/auth/register',
         {
             "mode": "cors",
             "method": "POST",
@@ -9,13 +9,8 @@ export let RegisterRequest = (fields, setErrorFields, setError) => {
             },
             "body": JSON.stringify(
                 {
-                    postCode: fields.postCode,
-                    city: fields.city,
-                    street: fields.street,
-                    houseNumber: fields.houseNumber,
-                    name: fields.name,
-                    email: fields.email,
-                    password: fields.password
+                    username: fields.username,
+                    password: fields.password,
                 }
             )
 
