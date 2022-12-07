@@ -1,0 +1,20 @@
+2.) Behavior-Driven Development (BDD).
+
+Budowa wybranej aplikacji z wykorzystaniem metodyki BDD.
+
+     a.) Opowiadania (4 punkty).
+	
+	USE CASE:
+	-	Jako admin chce mieć możliwość tworzenia i usuwania produktów, aby zarządzać zawartością sklepu.
+	-	Jako admin chce mieć możliwość przeglądania zamówień i ustawiania im statusu wysłano, aby móc realizować zamówienia klientów.
+	-	Jako użytkownik chce mieć możliwość dodawania komentarzy do produktów, aby dzielić się opiniami z innymi użytkownikami
+	-	Jako użytkownik chce mieć możliwość zapłaty za produkty w koszyku, aby kupić produkty.
+	-	Jako użytkownik chce mieć możliwość przeglądania produktów na stronie, dodania, usunięcia produktu z koszyka (i przeglądania produktów w koszyku), aby zarządzać tym co chce kupić.
+	-	Jako niezalogowany użytkownik chce mieć możliwość logowania i tworzenia konta, aby móc kupować i dzielić się opiniami z innymi użytkownikami
+	
+		
+     b.) Mapowanie opowiadań na metody (4 punkty).
+
+     c.) Uruchomienie metod testujących, na przykład, z wykorzystaniem narzędzia JUnit (4 punkty).
+
+     d.) Wygenerowanie raportów (4 punkty).
