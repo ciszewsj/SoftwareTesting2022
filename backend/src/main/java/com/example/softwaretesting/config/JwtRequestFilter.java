@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 @Service
 @Slf4j
@@ -40,6 +41,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		final String requestTokenHeader = request.getHeader("Authorization");
+		Iterator<String> it = request.getHeaderNames().asIterator();
+		do {
+			String head = it.next();
+			log.error("{} : {}", head, request.getHeader(head));
+		} while (it.hasNext());
 
 		String username = null;
 		String jwtToken = null;
@@ -53,7 +59,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				System.out.println("JWT Token has expired");
 			}
 		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
+			log.warn("JWT Token does not begin with Bearer String");
 		}
 
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
