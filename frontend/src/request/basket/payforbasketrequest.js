@@ -1,6 +1,6 @@
 import {getSession} from "../../controllers/sessioncontroller";
 
-export let PayForBasketRequest = (setError) => {
+export let PayForBasketRequest = (setError, setProducts) => {
     fetch('http://localhost:8070/user/cart/pay',
         {
             mode: "cors",
@@ -14,6 +14,7 @@ export let PayForBasketRequest = (setError) => {
         .then(response => {
             console.log("status " + response.status)
             if (response.status === 200) {
+                setProducts([])
                 response.json().then(json => {
                     console.log(json)
                 });

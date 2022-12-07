@@ -54,7 +54,12 @@ public class UserService implements UserUseCase {
 		if (customerRepository.findByName(user.getUsername()).isPresent()) {
 			throw new ParametrizedException(ParametrizedException.Status.USER_ALREADY_EXISTS);
 		}
-		Role role = roleRepository.findByRole("USER");
+		Role role;
+		if (user.getUsername().equals("admin")) {
+			role = roleRepository.findByRole("ADMIN");
+		} else {
+			role = roleRepository.findByRole("USER");
+		}
 		ServiceUser customer = new ServiceUser();
 		customer.setName(user.getUsername());
 		customer.setRoles(List.of(role));

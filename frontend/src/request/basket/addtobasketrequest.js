@@ -7,6 +7,7 @@ export let AddToBasketRequest = (id, number, setError) => {
             method: "PUT",
             headers: {
                 Accept: '*/*',
+                'Content-Type': "application/json",
                 Authorization: `Bearer ${getSession().token}`
             },
             body: JSON.stringify(
