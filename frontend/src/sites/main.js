@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {GetProductsRequest} from "../request/productrequest";
+import Product from "../help/product";
 
 export default function MainSite() {
     function Site() {
@@ -31,21 +32,13 @@ export default function MainSite() {
                 <ul type="none">
                     {products.map(product => (
                         <li key={product.id} className="container square border border-2 mb-2 pb-1">
-                            <div>
-                                <p>Name: {product.name}</p>
-                            </div>
-                            <div>
-                                <p>Price: {product.price}</p>
-                            </div>
-                            <div>
-                                <p>Status: {product.status}</p>
-                            </div>
+                            <Product product={product}/>
                             <div>
                                 <button type="button" className="btn btn-primary me-2" onClick={() => alert("TODO")}>
-                                    Comments
-                                </button>
-                                <button type="button" className="btn btn-primary" onClick={() => alert("TODO")}>
                                     Add to basket
+                                </button>
+                                <button type="button" className="btn btn-outline-primary" onClick={() => alert("TODO")}>
+                                    Comments
                                 </button>
                             </div>
                         </li>
