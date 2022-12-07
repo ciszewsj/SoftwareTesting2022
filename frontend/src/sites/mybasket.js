@@ -1,7 +1,7 @@
 import {Container} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import Product from "../help/product";
-import {GetBasketRequest} from "../request/basketrequest";
+import {GetBasketRequest} from "../request/basket/getbasketrequest";
 
 export default function MyBasketSite() {
     function Site() {

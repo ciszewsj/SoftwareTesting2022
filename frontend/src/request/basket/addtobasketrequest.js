@@ -1,14 +1,20 @@
-import {getSession} from "../controllers/sessioncontroller";
+import {getSession} from "../../controllers/sessioncontroller";
 
-export let GetBasketRequest = (setError, setProducts) => {
+export let AddToBasketRequest = (id, number, setError) => {
     fetch('http://localhost:8070/user/cart',
         {
             mode: "cors",
-            method: "GET",
+            method: "PUT",
             headers: {
                 Accept: '*/*',
                 Authorization: `Bearer ${getSession().token}`
-            }
+            },
+            body: JSON.stringify(
+                {
+                    productId: id,
+                    numberOfItems: number,
+                }
+            )
         }
     )
         .then(response => {
@@ -16,7 +22,6 @@ export let GetBasketRequest = (setError, setProducts) => {
             if (response.status === 200) {
                 response.json().then(json => {
                     console.log(json)
-                    setProducts(json.items)
                 });
             } else {
                 console.log(response)
@@ -24,7 +29,6 @@ export let GetBasketRequest = (setError, setProducts) => {
                     json => {
                         console.log(json)
                         setError(response.status + " " + JSON.stringify(json));
-                        setProducts([])
                     }
                 )
             }
@@ -32,6 +36,5 @@ export let GetBasketRequest = (setError, setProducts) => {
         .catch(e => {
             console.log(e.toString());
             setError(e.toString());
-            setProducts([])
         });
 }
