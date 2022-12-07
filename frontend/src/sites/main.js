@@ -17,13 +17,13 @@ export default function MainSite() {
         }])
         const [error, setError] = useState();
 
-        const createProductRequest = () => {
+        const getProductsRequest = () => {
             GetProductsRequest(setError, setProducts)
         }
 
         useEffect(() => {
-            createProductRequest()
-        })
+            getProductsRequest()
+        }, [])
 
         return (
             <div className="container p-3 m-auto">
