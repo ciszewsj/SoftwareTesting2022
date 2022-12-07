@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 @RequestMapping("/user/cart")
 public class UserCartController {
 	private final UserCartUseCase useCase;

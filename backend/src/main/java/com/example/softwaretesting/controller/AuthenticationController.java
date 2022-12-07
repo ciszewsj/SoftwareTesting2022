@@ -6,16 +6,14 @@ import com.example.softwaretesting.data.response.LoginResponse;
 import com.example.softwaretesting.usecase.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 @RequestMapping("/auth")
 public class AuthenticationController {
 	private final UserUseCase userUseCase;

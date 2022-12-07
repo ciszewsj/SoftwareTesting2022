@@ -10,15 +10,13 @@ export default function AppNavigation() {
     function Navigation() {
         return (<Navbar expand={"lg"} bg={"dark"} variant={"dark"}>
             <Container>
-                <NavLink className={"navbar-brand"} to="/">EasyPost</NavLink>
+                <NavLink className={"navbar-brand"} to="/">KajakShop</NavLink>
                 <Navbar.Toggle aria-controls={"navbarNavAltMarkup"}/>
                 <Navbar.Collapse id="navbarNavAltMarkup">
                     <Nav className={"me-auto"}>
                         <NavLink className={"nav-item nav-link"} to="/">Main</NavLink>
-                        <NavLink className={"nav-item nav-link"} to="/create">Create parcel</NavLink>
                         {(session.token.length !== 0) &&
-                            <NavLink className={"nav-item nav-link"} id="nav-my-parcels" to="/my_parcels">My
-                                parcels</NavLink>
+                            <NavLink className={"nav-item nav-link"} id="nav-my-basket" to="/my_basket">Basket</NavLink>
                         }
                         {session.role === "Admin" &&
                             <NavLink className={"nav-item nav-link"} to="/admin">Admin</NavLink>}

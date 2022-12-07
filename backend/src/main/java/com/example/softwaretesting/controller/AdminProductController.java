@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 @RequestMapping("/admin/product")
 public class AdminProductController {
 	private final AdminProductUseCase useCase;

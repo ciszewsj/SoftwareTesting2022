@@ -1,4 +1,4 @@
-import {Container, Pagination, Table} from "react-bootstrap";
+import {Container, Table} from "react-bootstrap";
 import {useEffect, useState} from "react";
 
 function AppTest({parcel}) {

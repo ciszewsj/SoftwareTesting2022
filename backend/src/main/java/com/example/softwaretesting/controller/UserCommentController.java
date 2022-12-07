@@ -13,6 +13,7 @@ import javax.validation.Valid;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
 @RequestMapping("/user/comment")
 public class UserCommentController {
 	private final UserCommentUseCase useCase;

@@ -11,6 +11,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin
+
 @RequestMapping("/admin/order")
 public class AdminOrderController {
 	private final AdminOrderUseCase useCase;
