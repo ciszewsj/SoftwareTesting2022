@@ -60,7 +60,7 @@ export default function RegisterSite() {
                     </div>
                     <button type="button" className="btn btn-primary" onClick={requestRegister}>Submit</button>
                 </form>
-                {error.status === 201 && <Navigate to="/login"/>}
+                {error.status === 200 && <Navigate to="/login"/>}
             </div>
         )
     }

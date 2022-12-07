@@ -23,7 +23,7 @@ export let RegisterRequest = (fields, setErrorFields, setError) => {
                 error.status = response.status;
                 return error;
             }
-            if (response.status === 201) {
+            if (response.status === 200) {
             } else if (response.status === 400) {
                 response.json().then(
                     json => {

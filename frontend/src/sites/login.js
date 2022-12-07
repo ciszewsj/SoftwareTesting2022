@@ -3,7 +3,6 @@ import {Container} from "react-bootstrap";
 import {UserContext} from "../index";
 import {Navigate} from "react-router-dom";
 import {LoginRequest} from "../request/loginrequest";
-import {addSession, getSession} from "../controllers/sessioncontroller";
 
 export default function LoginSite() {
     const [name, setName] = useState();
@@ -11,11 +10,7 @@ export default function LoginSite() {
     const [password, setPassword] = useState();
     const {session, setSession} = useContext(UserContext)
 
-
     function Site() {
-
-        addSession("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJleHAiOjE2NzA0NDEwNzAsImlhdCI6MTY3MDQyMzA3MH0.j9WF5Vdg7tPve2NEz2XeAn4vJ-n30BTzWYVedmLn7HBDAfgHKY8vfXrt0uGw_V2TC0mKeG0CFZsxRg9KCiBQzA")
-        setSession(getSession())
 
         const requestLogin = () => {
             LoginRequest(setSession, setError, name, password);

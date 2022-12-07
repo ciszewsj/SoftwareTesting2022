@@ -21,7 +21,7 @@ export let LoginRequest = (setState, setError, login, password) => {
         .then(response => {
             if (response.status === 200) {
                 response.json().then(json => {
-                    addSession(json.jwttoken)
+                    addSession(json.token)
                     setState(getSession())
                 });
             } else {
