@@ -5,17 +5,7 @@ import {AddToBasketRequest} from "../request/basket/addtobasketrequest";
 
 export default function MainSite() {
     function Site() {
-        const [products, setProducts] = useState([{
-            id: "1",
-            name: "Test",
-            price: "123.1",
-            status: "Available"
-        }, {
-            id: "2",
-            name: "Test2",
-            price: "123.1",
-            status: "Available"
-        }])
+        const [products, setProducts] = useState([])
         const [error, setError] = useState();
 
         const getProductsRequest = () => {
@@ -39,10 +29,11 @@ export default function MainSite() {
                         <li key={product.id} className="container square border border-2 mb-2 pb-1">
                             <Product product={product}/>
                             <div>
-                                <button type="button" className="btn btn-primary me-2"
-                                        onClick={() => addProductsToBasket(product.id, 1)}>
-                                    Add to basket
-                                </button>
+                                {product.status === "AVAILABLE" &&
+                                    <button type="button" className="btn btn-primary me-2"
+                                            onClick={() => addProductsToBasket(product.id, 1)}>
+                                        Add to basket
+                                    </button>}
                                 <button type="button" className="btn btn-outline-primary"
                                         onClick={() => alert("TODO")}>
                                     Comments
