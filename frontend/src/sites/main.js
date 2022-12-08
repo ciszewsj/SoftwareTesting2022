@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {GetProductsRequest} from "../request/getproductrequest";
 import Product from "../help/product";
 import {AddToBasketRequest} from "../request/basket/addtobasketrequest";
+import {getSession} from "../controllers/sessioncontroller";
 
 export default function MainSite() {
     function Site() {
@@ -29,7 +30,7 @@ export default function MainSite() {
                         <li key={product.id} className="container square border border-2 mb-2 pb-1">
                             <Product product={product}/>
                             <div>
-                                {product.status === "AVAILABLE" &&
+                                {(product.status === "AVAILABLE" && getSession().token !== "") &&
                                     <button type="button" className="btn btn-primary me-2"
                                             onClick={() => addProductsToBasket(product.id, 1)}>
                                         Add to basket
