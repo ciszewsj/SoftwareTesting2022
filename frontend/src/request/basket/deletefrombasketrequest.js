@@ -1,6 +1,6 @@
 import {getSession} from "../../controllers/sessioncontroller";
 
-export let DeleteFromBasketRequest = (id, numberOfItems, setError, setProducts) => {
+export let DeleteFromBasketRequest = (id, numberOfItems, setError, getBasketRequest ) => {
     fetch('http://localhost:8070/user/cart',
         {
             mode: "cors",
@@ -19,12 +19,7 @@ export let DeleteFromBasketRequest = (id, numberOfItems, setError, setProducts) 
         .then(response => {
             console.log("status " + response.status)
             if (response.status === 200) {
-                response.json().then(json => {
-                    console.log(json)
-                    setProducts(products => products.filter(function(value) {
-                        return value !== id
-                    }))
-                });
+                getBasketRequest()
             } else {
                 console.log(response)
                 response.json().then(

@@ -14,8 +14,8 @@ export default function MyBasketSite() {
             PayForBasketRequest(setError, setProducts)
         }
 
-        const removeFromBasketRequest = (id) => {
-            DeleteFromBasketRequest(id, 1, setError, setProducts)
+        const deleteFromBasketRequest = (id) => {
+            DeleteFromBasketRequest(id, 1, setError, getBasketRequest)
         }
 
         const getBasketRequest = () => {
@@ -37,7 +37,7 @@ export default function MyBasketSite() {
                         Amount: {product.numberOfItems}
                         <div>
                             <button type="button" className="btn btn-outline-primary"
-                                    onClick={() => removeFromBasketRequest(product.id)}>
+                                    onClick={() => deleteFromBasketRequest(product.item.id)}>
                                 Remove from basket
                             </button>
                         </div>
