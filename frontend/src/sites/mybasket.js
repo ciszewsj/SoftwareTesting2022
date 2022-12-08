@@ -43,9 +43,14 @@ export default function MyBasketSite() {
                         </div>
                     </div>
                 ))}
-                {(!error && products.length > 0) && <button type="submit" className="btn btn-primary btn-lg p-3 m-sm-1"
-                                   onClick={payForBasketRequest}>Pay
-                </button>}
+                {(!error && products.length > 0) && <div>
+                    <h5>You have to pay ${products.map(product => product.numberOfItems * product.item.price)} in total</h5>
+                    <div>
+                        <button type="submit" className="btn btn-primary btn-lg p-3 m-sm-1"
+                                onClick={payForBasketRequest}>Pay
+                        </button>
+                    </div>
+                </div>}
             </Container>
         )
     }
