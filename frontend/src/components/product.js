@@ -1,6 +1,6 @@
 export default function Product({product}) {
     return <div>
-        <h5>Name: {product.name}</h5>
+        <h3>Name: {product.name}</h3>
         Price: ${product.price}<br/>
         Status: {product.status}
     </div>

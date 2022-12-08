@@ -1,6 +1,6 @@
 import {Container} from "react-bootstrap";
 import {useEffect, useState} from "react";
-import Product from "../help/product";
+import Product from "../components/product";
 import {GetBasketRequest} from "../request/basket/getbasketrequest";
 import {DeleteFromBasketRequest} from "../request/basket/deletefrombasketrequest";
 import {PayForBasketRequest} from "../request/basket/payforbasketrequest";
