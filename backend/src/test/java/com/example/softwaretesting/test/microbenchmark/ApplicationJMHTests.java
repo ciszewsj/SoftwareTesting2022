@@ -3,6 +3,7 @@ package com.example.softwaretesting.test.microbenchmark;
 import com.example.softwaretesting.controller.AdminProductController;
 import com.example.softwaretesting.controller.AuthenticationController;
 import com.example.softwaretesting.data.request.CreateProductRequest;
+import com.example.softwaretesting.data.request.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,29 +20,22 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 @State(Scope.Thread)
-@BenchmarkMode(Mode.AverageTime)
+@BenchmarkMode(Mode.Throughput)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @Slf4j
 public class ApplicationJMHTests {
-	private static AuthenticationController authenticationController;
 	private static AdminProductController adminProductController;
 
 	@Autowired
 	public void setController(AuthenticationController authenticationController,
 	                          AdminProductController adminProductController) {
-		ApplicationJMHTests.authenticationController = authenticationController;
 		ApplicationJMHTests.adminProductController = adminProductController;
 	}
 
 	@Test
 	public void runBenchmarks() throws Exception {
-		if (authenticationController == null) {
-			log.error("authenticationController is null");
-		} else {
-			log.info("authenticationController isn't null");
-		}
 		Options opts = new OptionsBuilder()
 				.include("\\." + this.getClass().getSimpleName() + "\\.")
 				.warmupIterations(0)
@@ -55,7 +49,6 @@ public class ApplicationJMHTests {
 
 		new Runner(opts).run();
 	}
-
 
 	@Benchmark
 	public void addProduct() {
