@@ -3,11 +3,11 @@ package com.example.softwaretesting.test.microbenchmark;
 import com.example.softwaretesting.controller.AdminProductController;
 import com.example.softwaretesting.controller.AuthenticationController;
 import com.example.softwaretesting.data.request.CreateProductRequest;
-import com.example.softwaretesting.data.request.LoginRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 @State(Scope.Thread)
-@BenchmarkMode(Mode.Throughput)
+@BenchmarkMode(Mode.SingleShotTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -29,8 +29,7 @@ public class ApplicationJMHTests {
 	private static AdminProductController adminProductController;
 
 	@Autowired
-	public void setController(AuthenticationController authenticationController,
-	                          AdminProductController adminProductController) {
+	public void setController(AdminProductController adminProductController) {
 		ApplicationJMHTests.adminProductController = adminProductController;
 	}
 
@@ -38,8 +37,8 @@ public class ApplicationJMHTests {
 	public void runBenchmarks() throws Exception {
 		Options opts = new OptionsBuilder()
 				.include("\\." + this.getClass().getSimpleName() + "\\.")
-				.warmupIterations(0)
-				.measurementIterations(3)
+				.warmupIterations(1)
+				.measurementIterations(20)
 				.forks(0)
 				.threads(1)
 				.shouldDoGC(true)
@@ -51,13 +50,13 @@ public class ApplicationJMHTests {
 	}
 
 	@Benchmark
-	public void addProduct() {
-		adminProductController.addProduct(CreateProductRequest
+	public void addProduct(Blackhole blackhole) {
+		blackhole.consume(adminProductController.addProduct(CreateProductRequest
 				.builder()
 				.name("Kayak")
 				.available(true)
 				.price(1000L)
-				.build());
+				.build()));
 	}
 
 	@Benchmark
@@ -71,13 +70,13 @@ public class ApplicationJMHTests {
 	}
 
 	@Benchmark
-	public void getProducts() {
-		adminProductController.getProducts();
+	public void getProducts(Blackhole blackhole) {
+		blackhole.consume(adminProductController.getProducts());
 	}
 
 	@Benchmark
-	public void getProduct(ProductToDelete product) {
-		adminProductController.getProduct(product.id);
+	public void getProduct(ProductToDelete product, Blackhole blackhole) {
+		blackhole.consume(adminProductController.getProduct(product.id));
 	}
 
 
